@@ -1,0 +1,202 @@
+# Pokemon Exercise — Requirements (Authoritative / AI Source of Truth)
+
+> This file is the single authoritative specification for implementation. It is optimized for machine parsing (tables, key-value lists, explicit ids). For a human-friendly narrative overview, see `README.md`.
+
+## Meta
+
+| Key | Value |
+|---|---|
+| Target framework | .NET 10 |
+| Persistence | SQLite |
+| Design goal | Decoupled, modular, testable. No overengineering for future distributed systems. |
+| Exercise order (must keep) | 1. Damage calculation, 2. Pokemon API, 3. Battle state API |
+| Dependency: Part 1 requires | Part 2 (Pokemon API must exist first, since damage calc needs the domain model) |
+| Dependency: Part 3 requires | Parts 1 and 2 |
+
+---
+
+## 1. Damage Calculation (Part 1)
+
+**Input:** attacking Pokemon, selected move, opponent Pokemon.
+**Output:** damage value (number), consumable by the battle system.
+
+Formula:
+```
+Damage = { [ (2 * Level / 5 + 2) * Attack * MovePower / Defense ] / 50 } * Effectiveness * (Random / 100)
+```
+
+| Symbol | Source |
+|---|---|
+| Level | Acting Pokemon |
+| Attack | Acting Pokemon base attack |
+| MovePower | Selected move's Power |
+| Defense | Opponent Pokemon base defense |
+| Effectiveness | Type chart lookup (attacking move type vs defending Pokemon type) |
+| Random | Random integer 85–100 inclusive (must be injectable/deterministic for tests) |
+
+### Effectiveness multipliers
+
+| Symbol | Meaning | Multiplier |
+|---|---|---|
+| `-` | Normal | 1 |
+| `x2` | Weakness | 2 |
+| `1/2` | Resistance | 0.5 |
+| `x0` | Immunity | 0 |
+
+> Actual type-vs-type matrix values (from `TypeEffectivenessMatrix.PNG`) still need to be transcribed into a machine-readable table/seed data. Placeholder until provided.
+
+### Acceptance criteria — Part 1
+- Damage calculation method exists and follows the formula exactly.
+- Effectiveness multiplier applied correctly per type chart.
+- Random factor constrained to 85–100 and overridable in tests.
+- Output usable directly by the battle system.
+
+---
+
+## 2. Pokemon API (Part 2)
+
+### Required capabilities
+- CRUD: base Pokemon
+- CRUD: moves
+- CRUD: My Pokemon (owned Pokemon instances)
+- CRUD: up to 4 moves assigned to an owned Pokemon
+- Query: moves of a given Pokemon
+- Query: possible moves for a given Pokemon
+- Query: Pokemon that share a given move
+
+### My Pokemon (V1 ownership rules)
+- References a base Pokemon (`BasePokemonId`).
+- Up to 4 moves.
+- Retrievable as its own resource.
+- `OwnerId` is a `string`.
+- No trainers/users/auth in V1.
+
+### Acceptance criteria — Part 2
+- Base Pokemon CRUD exists.
+- Moves CRUD exists.
+- My Pokemon CRUD exists; references a base Pokemon; up to 4 moves.
+- Queries exist for: a Pokemon's moves, possible moves for a Pokemon, Pokemon sharing a move.
+
+---
+
+## 3. Battle State API (Part 3)
+
+### Lifecycle
+Two states only: `Started`, `Finished`. No "not started" state — battle starts immediately on creation with both Pokemon, their selected moves, and required fight data.
+
+### Rules
+| Rule | Behavior |
+|---|---|
+| Turn order | Enforced |
+| Out-of-turn action | Rejected |
+| Actions per turn | One move/action |
+| Damage | Applied via Part 1 damage calculation |
+| Persistence | Battle state + full history (executed moves, turn data) persisted |
+| End condition | Battle marked `Finished` when a Pokemon reaches 0 HP |
+| Post-finish actions | Rejected (read-only except history/state queries) |
+| Post-finish queries | History and final state remain queryable |
+
+### Explicitly out of scope for battle logic (V1)
+Switching Pokemon, multiplayer, items, abilities, status effects, accuracy, critical hits, weather effects.
+
+### Acceptance criteria — Part 3
+- Battle created already initialized with two Pokemon, starts in `Started`.
+- Battle can transition to `Finished`.
+- Turn order enforced; out-of-turn execution rejected.
+- Battle actions/history persisted.
+- Battle ends when a Pokemon reaches 0 HP.
+- Finished battles reject further actions but allow history/state queries.
+
+---
+
+## 4. Domain Model
+
+### BasePokemon
+| Field | Type |
+|---|---|
+| Id | int/guid |
+| Name | string |
+| Type | string (single type only, V1) |
+| Level | int |
+| TotalHP | int |
+| BaseAttack | int |
+
+### MyPokemon (owned instance)
+| Field | Type |
+|---|---|
+| Id | int/guid |
+| OwnerId | string |
+| BasePokemonId | FK -> BasePokemon |
+| Name | string |
+| Type | string |
+| Level | int |
+| CurrentHP | int |
+| TotalHP | int |
+| BaseAttack | int |
+| Moves | up to 4, FK -> Move |
+
+### Move
+| Field | Type |
+|---|---|
+| Id | int/guid |
+| Name | string |
+| Type | string |
+| Power | int |
+| BaseDefense | int |
+| BaseSpecialAttack | int |
+| BaseSpecialDefense | int |
+| BaseSpeed | int |
+
+### Battle
+| Field | Type |
+|---|---|
+| Id | int/guid |
+| Status | enum: Started, Finished |
+| PokemonOneId | FK -> MyPokemon |
+| PokemonTwoId | FK -> MyPokemon |
+| CurrentTurn | reference to acting Pokemon |
+| WinnerPokemonId | FK -> MyPokemon (nullable until finished) |
+| FinishedAt | datetime? |
+
+### BattleAction
+| Field | Type |
+|---|---|
+| Id | int/guid |
+| BattleId | FK -> Battle |
+| TurnNumber | int |
+| ActingPokemonId | FK -> MyPokemon |
+| UsedMoveId | FK -> Move |
+| DamageDealt | number |
+| CreatedAt | datetime |
+
+### TypeEffectiveness
+Type-vs-type effectiveness matrix (attacking type x defending type -> multiplier). Must be seeded/implemented as part of the domain (see Part 1 note on pending matrix data).
+
+---
+
+## 5. Assumptions (V1)
+
+1. No physical/special move distinction.
+2. No physical/special defense distinction.
+3. Pokemon are single-type only.
+4. Battle phases are simple turn-based action updates.
+5. Battle starts immediately when created.
+6. Finished battles are read-only except for history/state queries.
+7. SQLite is sufficient for persistence.
+8. Random factor is controllable/injectable in tests for deterministic validation.
+9. `OwnerId` is a string.
+10. Trainers, users, and authentication are out of scope.
+
+## 6. Out of Scope (V1)
+
+Authentication, user management, trainers, external PokemonDB integration, multiplayer battles, advanced battle mechanics beyond this spec, UI/front-end, distributed-system architecture work (beyond keeping the design decoupled).
+
+## 7. V2 Proposals (Future, not implemented now)
+
+Trainers + authenticated ownership, real user accounts/authorization, battle pre-start/pending state, dual-type Pokemon, physical/special attack separation, physical/special defense separation, more advanced battle mechanics, switching Pokemon mid-battle, items/abilities/status conditions/critical hits/weather, richer battle analytics/replay, monolith -> distributed architecture migration if needed.
+
+## 8. Implementation Notes
+
+- Keep codebase modular and low-coupled; prefer simple boundaries over unnecessary abstraction.
+- Avoid overengineering for future distributed-system needs.
+- Build with testability in mind, especially damage and battle logic (inject randomness, isolate rules engine).
