@@ -107,3 +107,11 @@ Detailed request/response contracts to be defined when Part 2/3 implementation s
 - **`Pokemons.Tests` (unit)**: pure, fast tests against `Pokemons.Domain` only — damage formula (table-driven, fixed `IRandomProvider`), effectiveness lookup, battle rules (turn order, HP depletion, finished-state rejection). No database, no HTTP, no `WebApplicationFactory`.
 - **`Pokemons.IntegrationTests` (integration)**: exercises the real stack against each API separately — `WebApplicationFactory<Program>` for `Pokedex.API` (CRUD endpoints) and a separate one for `Battles.API` (battle flow), both against a SQLite database (temp file or `:memory:` connection kept open for the test's lifetime). Covers CRUD endpoints and full battle flow (create → execute actions → finish → query history), including out-of-turn and post-finish rejection.
 - Keeping them in separate projects lets unit tests run on every save/build (fast feedback) while integration tests run less frequently (e.g., CI, pre-commit) without slowing down the inner dev loop.
+
+### TDD vs. test-after — where each applies
+
+> Not a blanket TDD mandate. Apply it where it earns its keep (real logic/branching), skip it where it's just plumbing.
+
+- **TDD (test-first) for `Pokemons.Domain` logic** — `DamageCalculator`, `ITypeEffectivenessLookup`, the battle rules engine, and the Battle Turn Orchestrator. These have a documented contract (`requirements.md` formula, effectiveness matrix, turn/finish rules) and edge cases that are easy to get subtly wrong (effectiveness multipliers, 85–100% random range, out-of-turn rejection, post-finish rejection). Writing the test first pins down the contract before implementation and gives immediate regression coverage on the exercise's core deliverable (Part 1).
+- **Test-after for `Pokedex.API` CRUD endpoints** — plain create/read/update against EF Core has little branching logic; write the endpoint, then add an integration test proving the contract (status codes, validation errors, the required query endpoints). TDD here is mostly busywork.
+- **General rule**: if a test doesn't force a new abstraction or expose a real edge case, don't add one — this keeps testing aligned with the "no interfaces/layers just in case" principle above.
