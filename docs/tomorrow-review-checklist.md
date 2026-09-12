@@ -21,6 +21,10 @@
 8. Confirmed with recruiter: V1 seed data is only **6 `BasePokemon`, one per type** — not all 18 types, and exhaustive type-matchup testing is not required. Reflected in `requirements.md` (assumption 11), `plan.md` (Phase 1/2 scope), `e2e-test-plan.md`, and `README.md` (assumption 11 + Quality section).
 9. `README.md`: added Quality & Security Checks section (code coverage locally, Nexus IQ/Fortify + full E2E QA explicitly out of scope for V1).
 
+## ⚠️ Do not forget before finishing V1
+
+- **Update `README.md` "Tech Stack" → "Libraries / Tools" section** (currently `TBD`) with the actual packages/versions used. **Explicitly requested by the recruiter** — this is now step 5 of "Definition of Done for V1" in `docs/plan.md`.
+
 ## Time budget for tomorrow (4 hours total)
 
 - Review (above): ~20–30 min
