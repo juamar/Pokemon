@@ -43,7 +43,30 @@ Damage = { [ (2 * Level / 5 + 2) * Attack * MovePower / Defense ] / 50 } * Effec
 | `1/2` | Resistance | 0.5 |
 | `x0` | Immunity | 0 |
 
-> Actual type-vs-type matrix values (from `TypeEffectivenessMatrix.PNG`) still need to be transcribed into a machine-readable table/seed data. Placeholder until provided.
+> Full type-vs-type matrix below (transcribed from TypeEffectivenessMatrix.PNG). Row = attacking move type, Column = defending Pokemon type.
+
+#### Type Effectiveness Matrix
+
+| Attacker \ Defender | Acero | Agua | Bicho | Dragon | Electrico | Fantasma | Fuego | Hada | Hielo | Lucha | Normal | Planta | Psiquico | Roca | Siniestro | Tierra | Veneno | Volador |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Acero | 1/2 | 1/2 | - | - | 1/2 | - | 1/2 | x2 | x2 | - | - | - | - | x2 | - | - | - | - |
+| Agua | - | 1/2 | - | 1/2 | - | - | x2 | - | - | - | - | 1/2 | - | x2 | - | x2 | - | - |
+| Bicho | 1/2 | - | - | - | - | 1/2 | 1/2 | 1/2 | - | 1/2 | - | x2 | x2 | - | x2 | - | 1/2 | 1/2 |
+| Dragon | 1/2 | - | - | x2 | - | - | - | x0 | - | - | - | - | - | - | - | - | - | - |
+| Electrico | - | x2 | - | 1/2 | 1/2 | - | - | - | - | - | - | 1/2 | - | - | - | x0 | - | x2 |
+| Fantasma | - | - | - | - | - | x2 | - | - | - | - | x0 | - | x2 | - | 1/2 | - | - | - |
+| Fuego | x2 | 1/2 | x2 | 1/2 | - | - | 1/2 | - | x2 | - | - | x2 | - | 1/2 | - | - | - | - |
+| Hada | 1/2 | - | - | x2 | - | - | 1/2 | - | - | x2 | - | - | - | - | x2 | - | 1/2 | - |
+| Hielo | 1/2 | 1/2 | - | x2 | - | - | 1/2 | - | 1/2 | - | - | x2 | - | - | - | x2 | - | x2 |
+| Lucha | x2 | - | 1/2 | - | - | x0 | - | 1/2 | x2 | - | x2 | - | 1/2 | x2 | x2 | - | 1/2 | 1/2 |
+| Normal | 1/2 | - | - | - | - | x0 | - | - | - | - | - | - | - | 1/2 | - | - | - | - |
+| Planta | 1/2 | x2 | 1/2 | 1/2 | - | - | 1/2 | - | - | - | - | 1/2 | - | x2 | - | x2 | 1/2 | 1/2 |
+| Psiquico | 1/2 | - | - | - | - | - | - | - | - | x2 | - | - | 1/2 | - | x0 | - | x2 | - |
+| Roca | 1/2 | - | x2 | - | - | - | x2 | - | x2 | 1/2 | - | - | - | - | - | 1/2 | - | x2 |
+| Siniestro | 1/2 | - | - | - | - | x2 | - | 1/2 | - | 1/2 | - | - | x2 | - | 1/2 | - | - | - |
+| Tierra | x2 | - | 1/2 | - | x2 | - | x2 | - | - | - | - | 1/2 | - | x2 | - | - | x2 | x0 |
+| Veneno | x0 | - | - | - | - | 1/2 | - | x2 | - | - | - | x2 | - | 1/2 | - | 1/2 | 1/2 | - |
+| Volador | 1/2 | - | x2 | - | 1/2 | - | - | - | - | x2 | - | x2 | - | 1/2 | - | - | - | - |
 
 ### Acceptance criteria — Part 1
 - Damage calculation method exists and follows the formula exactly.
@@ -170,7 +193,7 @@ Switching Pokemon, multiplayer, items, abilities, status effects, accuracy, crit
 | CreatedAt | datetime |
 
 ### TypeEffectiveness
-Type-vs-type effectiveness matrix (attacking type x defending type -> multiplier). Must be seeded/implemented as part of the domain (see Part 1 note on pending matrix data).
+Type-vs-type effectiveness matrix (attacking type x defending type -> multiplier). Must be seeded/implemented as part of the domain. See §1 [Type Effectiveness Matrix](#type-effectiveness-matrix) for the full transcribed data used to seed this table.
 
 ---
 
