@@ -41,6 +41,7 @@ The following assumptions are currently taken for V1:
 8. The random factor can be controlled in tests for deterministic validation.
 9. `ownerId` is a string.
 10. Trainers, users, and authentication are out of scope for V1.
+11. Seed data for V1 includes only 6 Pokemon (one per selected type, confirmed with recruiter) — not all 18 types.
 
 ---
 
@@ -48,6 +49,7 @@ The following assumptions are currently taken for V1:
 
 - **Code coverage** for unit tests is checked locally via `coverlet.collector` + `dotnet test --collect:"XPlat Code Coverage"`, summarized with `dotnet-reportgenerator-globaltool` (see `scripts/run-coverage.ps1`). Focused on `Pokemons.Domain` (the pure logic).
 - **Nexus IQ / Fortify** (or equivalent SCA/SAST scanning for dependencies, libraries, and security vulnerabilities) are **out of scope for V1** of this exercise.
+- **Full end-to-end QA** is **out of scope for V1** — only a happy-path smoke test (see `docs/e2e-test-plan.md`) is run as part of the V1 Definition of Done. The full E2E checklist is kept as backlog for a future hardening pass.
 
 ---
 

@@ -7,6 +7,7 @@
 - [docs/requirements.md](../docs/requirements.md) — authoritative spec: exercise rules, domain model, damage formula, type effectiveness matrix, acceptance criteria, assumptions. Source of truth for **what** the system must do.
 - [docs/architecture.md](../docs/architecture.md) — solution structure, project responsibilities, SOLID rationale, persistence/DIP design. Source of truth for **how** the system is structured.
 - [docs/plan.md](../docs/plan.md) — phased implementation roadmap. Follow phase order when scaffolding or implementing new work.
+- [docs/e2e-test-plan.md](../docs/e2e-test-plan.md) — manual/scripted end-to-end checklist covering both APIs together, executed as part of the V1 Definition of Done.
 
 ## Guiding principle
 
@@ -36,3 +37,9 @@ The human must stay in control of every change — never batch multiple phases o
 - **Every unit of work that touches `Pokemons.Domain` logic (damage calculation, type effectiveness, battle rules, Battle Turn Orchestrator) must include its tests as part of the same unit** — write the test alongside (ideally before, per the TDD-vs-test-after split in `docs/architecture.md`) the implementation, not as a separate deferred step. A unit of work is not "done" until its relevant tests exist and pass.
 - **CRUD endpoints in `Pokedex.API`** get an integration test in the same unit that adds the endpoint (test-after is fine here, per `docs/architecture.md`), rather than shipping the endpoint untested.
 - **Coverage tooling (no Sonar available)**: run `./scripts/run-coverage.ps1` (optionally `-OpenReport`) at the end of a unit of work to run the full suite with `coverlet.collector` + `dotnet test --collect:"XPlat Code Coverage"` and generate a local HTML/summary report via `dotnet-reportgenerator-globaltool` under `./coveragereport`. Coverage focus is `Pokemons.Domain` (the pure logic), not EF/API plumbing.
+
+## Docs reconciliation per unit of work
+
+- **Docs reconciliation is incremental, not just a final step.** At the end of each unit of work, check whether `docs/requirements.md`, `docs/architecture.md`, or `docs/plan.md` need updating because the implementation revealed a divergence from what was written (e.g. a decision changed, a new interface was justified, a phase's scope shifted) — reconcile them in the same unit, not deferred to a final pass.
+- **Call out doc drift explicitly** in the response when it's found (e.g. "implementation required X, which differs from architecture.md's Y — updating architecture.md accordingly") rather than silently letting code and docs disagree.
+- **The end-of-project "Definition of Done" reconciliation pass (`docs/plan.md`) is a final sweep/safety net**, not the first time docs get reconciled — most drift should already be caught and fixed unit by unit.

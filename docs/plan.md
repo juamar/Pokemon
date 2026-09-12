@@ -14,12 +14,12 @@
 - [ ] Define entities in `Pokemons.Domain`: `BasePokemon`, `MyPokemon`, `Move`, `Battle`, `BattleAction`.
 - [ ] Define `TypeEffectiveness` lookup and seed data from the matrix in `requirements.md` §1.
 - [ ] Create `PokemonsDbContext` in `Pokemons.Infra` with EF configurations + SQLite.
-- [ ] Add initial migration + seed data (base Pokemon, moves, type chart).
+- [ ] Add initial migration + seed data: 6 `BasePokemon` (one per selected type, per `requirements.md` §5 assumption 11), a handful of `Move`s, and the full type chart.
 
 ## Phase 2 — Damage Calculation (Part 1)
 - [ ] Define `IRandomProvider` in `Pokemons.Domain`; real impl (System.Random-based) + fixed/fake impl for tests.
 - [ ] Implement damage formula service per `requirements.md` §1.
-- [ ] Unit tests (`Pokemons.Tests`): formula correctness, effectiveness multiplier application, random bounds (85–100), deterministic override in tests.
+- [ ] Unit tests (`Pokemons.Tests`): formula correctness, effectiveness multiplier application (representative cases only — one weakness/resistance/neutral/immunity, not all 18x18 combinations, per confirmed scope), random bounds (85–100), deterministic override in tests.
 
 ## Phase 3 — Pokemon API (Part 2) — `Pokedex.API`
 - [ ] CRUD endpoints: Base Pokemon, Moves, My Pokemon (+ up to 4 moves assignment).
@@ -42,3 +42,17 @@
 ## Notes
 
 - The type effectiveness matrix is now transcribed in `requirements.md` §1. A few source cells had unexplained footnotes (see note above the matrix) — double-check those during Phase 1 seeding if odd behavior is observed.
+
+## Definition of Done for V1
+
+Once all phases/units of work above are complete:
+
+1. **Full solution build** — zero errors/warnings across all projects.
+2. **Full test run** — unit (`Pokemons.Tests`) + integration (`Pokemons.IntegrationTests`) all green, not just the last touched area.
+3. **Full coverage report** — run `./scripts/run-coverage.ps1 -OpenReport`; sanity-check `Pokemons.Domain` coverage as a whole.
+4. **Docs reconciliation (final sweep)** — per-unit-of-work reconciliation should already keep docs current (see `.github/copilot-instructions.md`); this is the safety-net pass to catch anything missed:
+   - `docs/plan.md` — mark all phases done; remove/adjust stale notes.
+   - `docs/architecture.md` — confirm it still matches actual code (interfaces, project names, DI wiring); update if implementation diverged from design.
+   - `README.md` — add a "How to run" section (restore, migrations, run each API, run tests, run coverage); update "Libraries / Tools" from `TBD` to actual packages used.
+5. **Smoke test** — execute the "Smoke Test (V1)" section of [docs/e2e-test-plan.md](e2e-test-plan.md) and record the outcome in its result log. Full E2E QA (the rest of that document) is out of scope for V1 — deferred/backlog only.
+6. **Final commit + push** — one last reviewed commit (e.g. "V1 complete: all phases implemented, tests passing, docs reconciled").

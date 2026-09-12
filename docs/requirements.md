@@ -43,7 +43,7 @@ Damage = { [ (2 * Level / 5 + 2) * Attack * MovePower / Defense ] / 50 } * Effec
 | `1/2` | Resistance | 0.5 |
 | `x0` | Immunity | 0 |
 
-> Full type-vs-type matrix below (transcribed from TypeEffectivenessMatrix.PNG). Row = attacking move type, Column = defending Pokemon type.
+> Full type-vs-type matrix below (transcribed from TypeEffectivenessMatrix.PNG). Row = attacking move type, Column = defending Pokemon type. The full matrix is seeded regardless of scope, but V1 seed data only uses 6 Pokemon (one per type, see §5 assumption 11) — tests only need to exercise the type pairs present among those 6, not the full matrix.
 
 #### Type Effectiveness Matrix
 
@@ -209,6 +209,7 @@ Type-vs-type effectiveness matrix (attacking type x defending type -> multiplier
 8. Random factor is controllable/injectable in tests for deterministic validation.
 9. `OwnerId` is a string.
 10. Trainers, users, and authentication are out of scope.
+11. **Seed data scope (confirmed with recruiter)**: V1 seed data includes only 6 `BasePokemon`, one per selected type (not all 18 types). The full type-effectiveness matrix is still seeded/persisted as-is (cheap, already transcribed), but only the type pairs actually represented among the 6 seeded Pokemon need to be exercised by tests/E2E — exhaustive coverage of all 18x18 type combinations is explicitly not required.
 
 ## 6. Out of Scope (V1)
 
