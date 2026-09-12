@@ -20,3 +20,19 @@ Keep it simple. No Clean Architecture ceremony, no CQRS/MediatR, no interfaces "
 - **Prefer concrete classes over interfaces** when there is, and will only ever be, one implementation (e.g. `DamageCalculator`). Add an interface when there's a genuine substitutability need (e.g. `IRandomProvider` for deterministic tests, repository interfaces for provider portability).
 - **Persistence is EF Core Code-First**, isolated entirely in `Pokemons.Infra`. `Pokemons.Domain` entities are plain C# POCOs with no EF attributes/types. Provider selection (SQLite today, SQL Server later) is a single DI seam (`AddPokemonsPersistence(...)`).
 - Before proposing new abstractions or layers, check `docs/architecture.md`'s "Key Design Decisions" and "SOLID Principles Applied" sections — many of these tradeoffs have already been discussed and decided.
+
+## Working in reviewable units of work
+
+The human must stay in control of every change — never batch multiple phases or unrelated concerns into one uninterrupted run.
+
+- **One unit of work = one `docs/plan.md` step (or a single, clearly-scoped sub-task)**, not a whole phase and not the whole plan. Stop after completing a unit and let the human review before continuing to the next.
+- **Pause for review before committing or moving to the next unit.** Do not chain "implement → commit → next step" without an explicit go-ahead. Committing/pushing to git only happens when the human asks for it.
+- **Call out new interfaces, services, repositories, or other abstractions explicitly** in the response the moment they're introduced — don't let them appear silently inside a larger multi-file diff.
+- **Prefer several small diffs over one large one.** If a task naturally spans multiple files/projects, sequence the edits and summarize each before moving on, rather than editing everything and presenting it all at once.
+- **Keep the working tree easy to audit**: after a unit of work, a `git status`/diff should show only the files relevant to that unit — no incidental or drive-by changes.
+
+## Testing requirement per unit of work
+
+- **Every unit of work that touches `Pokemons.Domain` logic (damage calculation, type effectiveness, battle rules, Battle Turn Orchestrator) must include its tests as part of the same unit** — write the test alongside (ideally before, per the TDD-vs-test-after split in `docs/architecture.md`) the implementation, not as a separate deferred step. A unit of work is not "done" until its relevant tests exist and pass.
+- **CRUD endpoints in `Pokedex.API`** get an integration test in the same unit that adds the endpoint (test-after is fine here, per `docs/architecture.md`), rather than shipping the endpoint untested.
+- **Coverage tooling (no Sonar available)**: run `./scripts/run-coverage.ps1` (optionally `-OpenReport`) at the end of a unit of work to run the full suite with `coverlet.collector` + `dotnet test --collect:"XPlat Code Coverage"` and generate a local HTML/summary report via `dotnet-reportgenerator-globaltool` under `./coveragereport`. Coverage focus is `Pokemons.Domain` (the pure logic), not EF/API plumbing.

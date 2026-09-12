@@ -28,6 +28,10 @@ bld/
 *.nupkg
 *.snupkg
 **/[Pp]ackages/*
+
+# Test coverage
+TestResults/
+coveragereport/
 !**/[Pp]ackages/build/
 project.lock.json
 project.fragment.lock.json
