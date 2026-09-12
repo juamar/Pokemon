@@ -89,3 +89,8 @@ The following ideas are intentionally left for a future version:
 
 - `requirements.md` is the source of truth for the exercise requirements.
 - This README is a human-friendly overview of the project, current assumptions, V1 boundaries, and future ideas.
+
+### Questions for next interview session
+
+- Are you using AI tools (e.g., Copilot, ChatGPT, Codex, Claude) to assist with coding? Do you have any workflow or best practices for using them effectively?
+- What is your approach for requirements gathering and documentation? How do you ensure that the requirements are clear, complete, and testable?
