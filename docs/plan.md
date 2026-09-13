@@ -3,15 +3,15 @@
 > Roadmap derived from `docs/requirements.md` (spec) and `docs/architecture.md` (structure). Order must follow the exercise's required sequence: Part 1 → Part 2 → Part 3, but Part 2's domain model is scaffolded first since Part 1 depends on it (see requirements Meta table).
 
 ## Phase 0 — Scaffolding
-- [ ] Create `Pokemons.Domain`, `Pokemons.Infra` class library projects; add to solution.
-- [ ] Create `Pokedex.API` ASP.NET Core Web API project, own Swagger doc.
-- [ ] Create `Battles.API` ASP.NET Core Web API project (separate from `Pokedex.API`), own Swagger doc.
-- [ ] Create `Pokemons.Tests` xUnit project (unit tests only).
-- [ ] Create `Pokemons.IntegrationTests` xUnit project (integration tests only).
-- [ ] Wire project references per `architecture.md`.
-- [ ] Add EF Core + SQLite packages to `Pokemons.Infra`.
-- [ ] **Remove template boilerplate** from each generated API project (e.g., `WeatherForecast.cs`, `WeatherForecastController.cs`, sample `.http` requests) — no leftover `dotnet new` sample code. This is part of the Acceptance Criteria for Phase 0, not optional cleanup.
-- [ ] Build the solution; confirm zero errors/warnings before moving to Phase 1 (no TDD here — this phase is pure project scaffolding with no domain logic yet to test).
+- [x] Create `Pokemons.Domain`, `Pokemons.Infra` class library projects; add to solution.
+- [x] Create `Pokedex.API` ASP.NET Core Web API project, own Swagger doc.
+- [x] Create `Battles.API` ASP.NET Core Web API project (separate from `Pokedex.API`), own Swagger doc.
+- [x] Create `Pokemons.Tests` xUnit project (unit tests only).
+- [x] Create `Pokemons.IntegrationTests` xUnit project (integration tests only).
+- [x] Wire project references per `architecture.md`.
+- [x] Add EF Core + SQLite packages to `Pokemons.Infra`.
+- [x] **Remove template boilerplate** from each generated API project (e.g., `WeatherForecast.cs`, `WeatherForecastController.cs`, sample `.http` requests) — no leftover `dotnet new` sample code. This is part of the Acceptance Criteria for Phase 0, not optional cleanup.
+- [x] Build the solution; confirm zero errors/warnings before moving to Phase 1 (no TDD here — this phase is pure project scaffolding with no domain logic yet to test).
 
 ## Phase 1 — Domain Model & Persistence (supports Part 2, prerequisite for Part 1)
 - [ ] Define entities in `Pokemons.Domain`: `BasePokemon`, `MyPokemon`, `Move`, `Battle`, `BattleAction`.

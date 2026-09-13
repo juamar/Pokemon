@@ -10,15 +10,16 @@ Keep it simple. No Clean Architecture ceremony, no CQRS/MediatR, no premature in
 
 ```
 Pokemon.slnx
-├── src/
-│   ├── Pokedex.API/                 # Part 2: Pokemon resources (BasePokemon, Moves, MyPokemon), own Swagger doc
-│   ├── Battles.API/                 # Part 3: Battle state (start/execute/finish/history), own Swagger doc
-│   ├── Pokemons.Domain/             # Part 1 + shared: entities, damage calculation, battle rules engine, type effectiveness. No EF/DB references.
-│   └── Pokemons.Infra/              # Part 2 support: EF Core DbContext, SQLite provider, repositories, seed data. Shared by both API projects.
-└── tests/
-	├── Pokemons.Tests/              # Part 1 verification: unit tests only (damage calc, battle rules) — no DB, no HTTP, fast/isolated
-	└── Pokemons.IntegrationTests/   # Part 2 + 3 verification: integration tests for both APIs — real SQLite + WebApplicationFactory per API
+├── Pokedex.API/                 # Part 2: Pokemon resources (BasePokemon, Moves, MyPokemon), own Swagger doc
+├── Battles.API/                 # Part 3: Battle state (start/execute/finish/history), own Swagger doc
+├── Pokemons.Domain/             # Part 1 + shared: entities, damage calculation, battle rules engine, type effectiveness. No EF/DB references.
+├── Pokemons.Infra/              # Part 2 support: EF Core DbContext, SQLite provider, repositories, seed data. Shared by both API projects.
+├── Pokemons.Tests/              # Part 1 verification: unit tests only (damage calc, battle rules) — no DB, no HTTP, fast/isolated
+└── Pokemons.IntegrationTests/   # Part 2 + 3 verification: integration tests for both APIs — real SQLite + WebApplicationFactory per API
 ```
+
+> All projects sit flat at the solution root (no `src/`/`tests/` subfolders) — matches the existing `Pokedex.API` layout and keeps the solution structure simple for this exercise's scope.
+
 
 > Both API projects point at the same SQLite database via `Pokemons.Infra` — no HTTP calls between them are needed (e.g., Battle API reads `MyPokemon`/`Move` rows directly through the shared `PokemonsDbContext`). This keeps them decoupled at the API/deployment level without the overhead of service-to-service calls for this exercise's scope.
 
