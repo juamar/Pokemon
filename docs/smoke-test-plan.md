@@ -6,6 +6,8 @@
 
 **Full E2E QA (the complete checklist below) is out of scope for V1** — only the **Smoke Test** section is required as part of the V1 Definition of Done. The full checklist is kept as a reference/backlog for a future hardening pass (V1.1+) if more time becomes available.
 
+> Naming note: by the book, a "smoke test" is just a quick build-doesn't-fall-over check. What's below is closer to an **enhanced/extended smoke test** — it also verifies a full happy-path business flow end-to-end (CRUD, queries, move-limit validation, a full battle to completion) rather than just confirming the app starts and responds. Kept under the "Smoke Test" name for simplicity, but treat it as this broader scope.
+
 ## Smoke Test (V1) — run this, not the full checklist
 
 A single happy-path walkthrough proving the three parts work together, using **only 2 of the 6 seeded Pokemon** (not all 6, and not all type combinations — just enough to prove the damage calculation is correct):
