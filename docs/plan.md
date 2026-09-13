@@ -4,6 +4,7 @@
 
 ## Phase 0 — Scaffolding
 - [ ] Create `Pokemons.Domain`, `Pokemons.Infra` class library projects; add to solution.
+- [ ] Create `Pokedex.API` ASP.NET Core Web API project, own Swagger doc.
 - [ ] Create `Battles.API` ASP.NET Core Web API project (separate from `Pokedex.API`), own Swagger doc.
 - [ ] Create `Pokemons.Tests` xUnit project (unit tests only).
 - [ ] Create `Pokemons.IntegrationTests` xUnit project (integration tests only).
