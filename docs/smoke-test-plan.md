@@ -46,9 +46,17 @@ Either manually via Swagger UI for each API, or scripted via `.http` files / `Po
 
 > Scope note (confirmed with recruiter): only 6 `BasePokemon` (one per selected type) are seeded for V1. Exhaustive coverage of all 18x18 type-effectiveness combinations is **not required** — spot-check representative cases only (one weakness, one resistance/neutral) using the type pairs actually present among the 6 seeded Pokemon.
 
-- [ ] Damage produced during a battle action matches the documented formula for known inputs (spot-check one turn's damage against manual calculation).
+- [ ] Damage produced during a battle action matches the documented formula for known inputs (spot-check one turn's damage against manual calculation) — verify against the **Expected Damage Verification Table** below.
 - [ ] Effectiveness multiplier is visibly applied for at least one weakness matchup among the seeded Pokemon (produces roughly double the damage of a neutral matchup, all else equal).
 - [ ] Random factor stays within 85–100% range across multiple executed turns.
+
+### Expected Damage Verification Table
+
+> **TBD — to be built in Phase 1 of `docs/plan.md`, once the 6 `BasePokemon` + `Move` seed data is finalized.** For 2–3 representative matchups (one weakness, one neutral), manually compute expected damage per the `requirements.md` §1 formula using the actual seeded Level/Attack/Defense/MovePower/type values, and record it here. Used to validate both the Phase 2 unit tests and this smoke test against real seed data, not arbitrary numbers.
+
+| Attacker | Move (Type/Power) | Defender | Effectiveness | Expected Damage (Random=85) | Expected Damage (Random=100) | Actual (recorded during smoke test) |
+|---|---|---|---|---|---|---|
+| _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | |
 
 ## Part 2 — Pokemon API (`Pokedex.API`)
 
