@@ -17,6 +17,8 @@ A single happy-path walkthrough proving the three parts work together, using the
 - [ ] Retrieve a `Move` by id.
 - [ ] Create/confirm a `MyPokemon` (from seeded `BasePokemon`) with 1–2 moves assigned.
 - [ ] Create a second `MyPokemon` (opponent) the same way.
+- [ ] Query: moves of a given My Pokemon — returns the assigned moves.
+- [ ] Query: possible moves for a given Pokemon — returns expected candidate moves.
 - [ ] Query: **Base Pokemon** sharing a given move — returns all `BasePokemon` with that move available/assigned (PDF: "Consulta para obtener una lista con los Pokémons que comparten un mismo movimiento" — targets `BasePokemon`, not `MyPokemon`).
 - [ ] Create a battle with both Pokemon + selected moves; confirm `Status = Started` immediately.
 - [ ] Execute one action for the Pokemon whose turn it is; confirm damage applied and HP updated.
@@ -53,9 +55,6 @@ Either manually via Swagger UI for each API, or scripted via `.http` files / `Po
 - [ ] Create a `MyPokemon` referencing a valid `BasePokemonId`.
 - [ ] Assign up to 4 moves to a `MyPokemon`; confirm a 5th assignment is rejected.
 - [ ] Attempt to create a `MyPokemon` with an invalid `BasePokemonId`; confirm rejection.
-- [ ] Query: moves of a given My Pokemon — returns the assigned moves.
-- [ ] Query: possible moves for a given Pokemon — returns expected candidate moves.
-- [ ] Query: Base Pokemon sharing a given move — returns all `BasePokemon` with that move available (not `MyPokemon`).
 - [ ] Create a second `MyPokemon` (opponent) with its own moves, for use in Part 3.
 
 ## Part 3 — Battle State API (`Battles.API`)
