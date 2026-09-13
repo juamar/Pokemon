@@ -10,6 +10,7 @@
 - [ ] Create `Pokemons.IntegrationTests` xUnit project (integration tests only).
 - [ ] Wire project references per `architecture.md`.
 - [ ] Add EF Core + SQLite packages to `Pokemons.Infra`.
+- [ ] **Remove template boilerplate** from each generated API project (e.g., `WeatherForecast.cs`, `WeatherForecastController.cs`, sample `.http` requests) — no leftover `dotnet new` sample code. This is part of the Acceptance Criteria for Phase 0, not optional cleanup.
 - [ ] Build the solution; confirm zero errors/warnings before moving to Phase 1 (no TDD here — this phase is pure project scaffolding with no domain logic yet to test).
 
 ## Phase 1 — Domain Model & Persistence (supports Part 2, prerequisite for Part 1)
