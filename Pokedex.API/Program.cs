@@ -1,3 +1,4 @@
+using Microsoft.OpenApi;
 using Pokemons.Infra.DependencyInjection;
 using Scalar.AspNetCore;
 
@@ -6,6 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Pokedex API", Version = "v1" });
+});
 builder.Services.AddPokemonsPersistence(builder.Configuration);
 
 var app = builder.Build();
@@ -13,7 +19,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapScalarApiReference();
+    app.UseSwagger();
+    app.MapScalarApiReference(options => options.WithOpenApiRoutePattern("/swagger/v1/swagger.json"));
 }
 
 app.UseHttpsRedirection();
