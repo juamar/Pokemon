@@ -55,5 +55,5 @@ Once all phases/units of work above are complete:
    - `docs/architecture.md` — confirm it still matches actual code (interfaces, project names, DI wiring); update if implementation diverged from design.
    - `README.md` — add a "How to run" section (restore, migrations, run each API, run tests, run coverage).
 5. **⚠️ Update `README.md` "Tech Stack" section — explicitly requested by the recruiter.** Replace the `TBD` placeholder under "Libraries / Tools" with the actual packages/versions used (EF Core provider, coverlet, xUnit, etc.) and confirm "Current / Planned" reflects what was actually built. Do not skip this — do it before leaving/finishing V1.
-6. **Smoke test** — execute the "Smoke Test (V1)" section of [docs/e2e-test-plan.md](e2e-test-plan.md) and record the outcome in its result log. Full E2E QA (the rest of that document) is out of scope for V1 — deferred/backlog only.
+6. **Smoke test** — execute the "Smoke Test (V1)" section of [docs/smoke-test-plan.md](smoke-test-plan.md) and record the outcome in its result log. Full E2E QA (the rest of that document) is out of scope for V1 — deferred/backlog only.
 7. **Final commit + push** — one last reviewed commit (e.g. "V1 complete: all phases implemented, tests passing, docs reconciled").

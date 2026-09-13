@@ -7,7 +7,7 @@
 - [docs/requirements.md](../docs/requirements.md) — authoritative spec: exercise rules, domain model, damage formula, type effectiveness matrix, acceptance criteria, assumptions. Source of truth for **what** the system must do.
 - [docs/architecture.md](../docs/architecture.md) — solution structure, project responsibilities, SOLID rationale, persistence/DIP design. Source of truth for **how** the system is structured.
 - [docs/plan.md](../docs/plan.md) — phased implementation roadmap. Follow phase order when scaffolding or implementing new work.
-- [docs/e2e-test-plan.md](../docs/e2e-test-plan.md) — manual/scripted end-to-end checklist covering both APIs together, executed as part of the V1 Definition of Done.
+- [docs/smoke-test-plan.md](../docs/smoke-test-plan.md) — manual/scripted end-to-end checklist covering both APIs together, executed as part of the V1 Definition of Done.
 
 ## Guiding principle
 

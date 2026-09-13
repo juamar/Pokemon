@@ -49,7 +49,7 @@ The following assumptions are currently taken for V1:
 
 - **Code coverage** for unit tests is checked locally via `coverlet.collector` + `dotnet test --collect:"XPlat Code Coverage"`, summarized with `dotnet-reportgenerator-globaltool` (see `scripts/run-coverage.ps1`). Focused on `Pokemons.Domain` (the pure logic).
 - **Nexus IQ / Fortify** (or equivalent SCA/SAST scanning for dependencies, libraries, and security vulnerabilities) are **out of scope for V1** of this exercise.
-- **Full end-to-end QA** is **out of scope for V1** — only a happy-path smoke test (see `docs/e2e-test-plan.md`) is run as part of the V1 Definition of Done. The full E2E checklist is kept as backlog for a future hardening pass.
+- **Full end-to-end QA** is **out of scope for V1** — only a happy-path smoke test (see `docs/smoke-test-plan.md`) is run as part of the V1 Definition of Done. The full E2E checklist is kept as backlog for a future hardening pass.
 
 ---
 

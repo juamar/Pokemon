@@ -1,4 +1,4 @@
-# End-to-End Test Plan (V1)
+# Smoke Test Plan (V1)
 
 > Companion to `docs/requirements.md` (acceptance criteria source) and `docs/plan.md` (roadmap). This is a manual/scripted walkthrough checklist proving the **whole flow** works across both APIs together, complementing (not replacing) `Pokemons.IntegrationTests`, which verify endpoints individually.
 
