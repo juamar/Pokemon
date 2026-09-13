@@ -24,6 +24,7 @@
 ## ⚠️ Do not forget before finishing V1
 
 - **Update `README.md` "Tech Stack" → "Libraries / Tools" section** (currently `TBD`) with the actual packages/versions used. **Explicitly requested by the recruiter** — this is now step 5 of "Definition of Done for V1" in `docs/plan.md`.
+- **Localize the damage calculation method for the recruiter** — update `README.md`'s Notes section with a direct file path (e.g., `Pokemons.Domain/DamageCalculator.cs`) pointing at the method implementing the Part 1 formula. Now step 7 of "Definition of Done for V1" in `docs/plan.md`.
 
 ## Time budget for tomorrow (4 hours total)
 

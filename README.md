@@ -89,6 +89,7 @@ The following ideas are intentionally left for a future version:
 
 - `requirements.md` is the source of truth for the exercise requirements.
 - This README is a human-friendly overview of the project, current assumptions, V1 boundaries, and future ideas.
+- **Damage calculation entry point (Part 1 core deliverable)**: `TBD — update once implemented, e.g. Pokemons.Domain/DamageCalculator.cs`.
 
 ### Questions for next interview session
 
