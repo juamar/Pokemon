@@ -4,7 +4,7 @@ using Pokemons.Domain.Repositories;
 
 namespace Pokemons.Infra.Repositories;
 
-public class MoveRepository(PokemonsDbContext dbContext) : IMoveRepository
+internal class MoveRepository(PokemonsDbContext dbContext) : IMoveRepository
 {
     public Task<Move?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
         dbContext.Moves.FirstOrDefaultAsync(m => m.Id == id, cancellationToken);

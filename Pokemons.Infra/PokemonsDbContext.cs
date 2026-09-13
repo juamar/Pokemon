@@ -3,7 +3,7 @@ using Pokemons.Domain.Entities;
 
 namespace Pokemons.Infra;
 
-public class PokemonsDbContext(DbContextOptions<PokemonsDbContext> options) : DbContext(options)
+internal class PokemonsDbContext(DbContextOptions<PokemonsDbContext> options) : DbContext(options)
 {
     public DbSet<BasePokemon> BasePokemons => Set<BasePokemon>();
     public DbSet<Move> Moves => Set<Move>();

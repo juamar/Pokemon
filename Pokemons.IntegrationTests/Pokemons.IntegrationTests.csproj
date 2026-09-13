@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pokedex.API\Pokedex.API.csproj" />
-    <ProjectReference Include="..\Battles.API\Battles.API.csproj" />
     <ProjectReference Include="..\Pokemons.Infra\Pokemons.Infra.csproj" />
   </ItemGroup>
 

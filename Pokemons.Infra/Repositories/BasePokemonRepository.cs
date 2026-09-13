@@ -4,7 +4,7 @@ using Pokemons.Domain.Repositories;
 
 namespace Pokemons.Infra.Repositories;
 
-public class BasePokemonRepository(PokemonsDbContext dbContext) : IBasePokemonRepository
+internal class BasePokemonRepository(PokemonsDbContext dbContext) : IBasePokemonRepository
 {
     public Task<BasePokemon?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
         dbContext.BasePokemons.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);

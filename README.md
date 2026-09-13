@@ -45,14 +45,6 @@ The following assumptions are currently taken for V1:
 
 ---
 
-## Quality & Security Checks
-
-- **Code coverage** for unit tests is checked locally via `coverlet.collector` + `dotnet test --collect:"XPlat Code Coverage"`, summarized with `dotnet-reportgenerator-globaltool` (see `scripts/run-coverage.ps1`). Focused on `Pokemons.Domain` (the pure logic).
-- **Nexus IQ / Fortify** (or equivalent SCA/SAST scanning for dependencies, libraries, and security vulnerabilities) are **out of scope for V1** of this exercise.
-- **Full end-to-end QA** is **out of scope for V1** — only smoke tests with enhanced scope (see [docs/smoke-test-plan.md](docs/smoke-test-plan.md)) is run as part of the V1 Definition of Done. The full E2E checklist is kept as backlog for a future hardening pass.
-
----
-
 ## Out of Scope for V1
 
 - Authentication
@@ -63,7 +55,6 @@ The following assumptions are currently taken for V1:
 - Advanced battle mechanics not described in the exercise
 - UI/front-end
 - Distributed-system architecture work beyond keeping the design decoupled
-- Nexus IQ / Fortify (or equivalent dependency/security scanning)
 
 ---
 

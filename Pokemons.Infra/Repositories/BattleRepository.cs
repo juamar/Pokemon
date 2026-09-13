@@ -4,7 +4,7 @@ using Pokemons.Domain.Repositories;
 
 namespace Pokemons.Infra.Repositories;
 
-public class BattleRepository(PokemonsDbContext dbContext) : IBattleRepository
+internal class BattleRepository(PokemonsDbContext dbContext) : IBattleRepository
 {
     public Task<Battle?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
         dbContext.Battles

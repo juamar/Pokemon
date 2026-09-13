@@ -3,7 +3,7 @@ using Pokemons.Domain.Repositories;
 
 namespace Pokemons.Infra.Repositories;
 
-public class TypeEffectivenessLookup(PokemonsDbContext dbContext) : ITypeEffectivenessLookup
+internal class TypeEffectivenessLookup(PokemonsDbContext dbContext) : ITypeEffectivenessLookup
 {
     public async Task<double> GetMultiplierAsync(string attackerType, string defenderType, CancellationToken cancellationToken = default)
     {

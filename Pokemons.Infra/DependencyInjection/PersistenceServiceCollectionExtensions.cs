@@ -28,4 +28,11 @@ public static class PersistenceServiceCollectionExtensions
 
         return services;
     }
+
+    public static async Task ApplyPokemonsMigrationsAsync(this IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<PokemonsDbContext>();
+        await dbContext.Database.MigrateAsync(cancellationToken);
+    }
 }
