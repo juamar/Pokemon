@@ -23,7 +23,7 @@
 
 ## Phase 3 — Pokemon API (Part 2) — `Pokedex.API`
 - [ ] CRUD endpoints: Base Pokemon, Moves, My Pokemon (+ up to 4 moves assignment).
-- [ ] Query endpoints: moves of a Pokemon, possible moves for a Pokemon, Pokemon sharing a move.
+- [ ] Query endpoints: moves of a My Pokemon, possible moves for a Pokemon, **Base Pokemon** sharing a move (PDF: "Consulta para obtener una lista con los Pokémons que comparten un mismo movimiento" — targets `BasePokemon`, not `MyPokemon`).
 - [ ] Validation: My Pokemon references valid base Pokemon; max 4 moves.
 - [ ] Integration tests (`Pokemons.IntegrationTests`) for all endpoints.
 

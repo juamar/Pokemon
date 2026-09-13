@@ -10,8 +10,14 @@
 
 A single happy-path walkthrough proving the three parts work together, using the 6 seeded Pokemon (one per type):
 
+- [ ] Create a `BasePokemon` (e.g., two different types to exercise effectiveness later) — or confirm seeded data already covers this (6 Pokemon, one per type, per V1 scope).
+- [ ] Retrieve the created `BasePokemon` by id.
+- [ ] Update a `BasePokemon` and confirm the change persists.
+- [ ] Create at least 2 `Move`s (different types/powers).
+- [ ] Retrieve a `Move` by id.
 - [ ] Create/confirm a `MyPokemon` (from seeded `BasePokemon`) with 1–2 moves assigned.
 - [ ] Create a second `MyPokemon` (opponent) the same way.
+- [ ] Query: **Base Pokemon** sharing a given move — returns all `BasePokemon` with that move available/assigned (PDF: "Consulta para obtener una lista con los Pokémons que comparten un mismo movimiento" — targets `BasePokemon`, not `MyPokemon`).
 - [ ] Create a battle with both Pokemon + selected moves; confirm `Status = Started` immediately.
 - [ ] Execute one action for the Pokemon whose turn it is; confirm damage applied and HP updated.
 - [ ] Continue executing turns until one Pokemon's HP reaches 0.
@@ -32,6 +38,7 @@ Either manually via Swagger UI for each API, or scripted via `.http` files / `Po
 ## Full Checklist (deferred / backlog — not required for V1)
 
 > Kept for reference and as a candidate scope for a future hardening pass. Do not block V1 completion on this section.
+> Human validation pending
 
 ## Part 1 — Damage Calculation (verified via unit tests, sanity-checked here through battle flow)
 
@@ -43,17 +50,12 @@ Either manually via Swagger UI for each API, or scripted via `.http` files / `Po
 
 ## Part 2 — Pokemon API (`Pokedex.API`)
 
-- [ ] Create a `BasePokemon` (e.g., two different types to exercise effectiveness later) — or confirm seeded data already covers this (6 Pokemon, one per type, per V1 scope).
-- [ ] Retrieve the created `BasePokemon` by id.
-- [ ] Update a `BasePokemon` and confirm the change persists.
-- [ ] Create at least 2 `Move`s (different types/powers).
-- [ ] Retrieve a `Move` by id.
 - [ ] Create a `MyPokemon` referencing a valid `BasePokemonId`.
 - [ ] Assign up to 4 moves to a `MyPokemon`; confirm a 5th assignment is rejected.
 - [ ] Attempt to create a `MyPokemon` with an invalid `BasePokemonId`; confirm rejection.
-- [ ] Query: moves of a given Pokemon — returns the assigned moves.
+- [ ] Query: moves of a given My Pokemon — returns the assigned moves.
 - [ ] Query: possible moves for a given Pokemon — returns expected candidate moves.
-- [ ] Query: Pokemon sharing a given move — returns all `MyPokemon` with that move assigned.
+- [ ] Query: Base Pokemon sharing a given move — returns all `BasePokemon` with that move available (not `MyPokemon`).
 - [ ] Create a second `MyPokemon` (opponent) with its own moves, for use in Part 3.
 
 ## Part 3 — Battle State API (`Battles.API`)

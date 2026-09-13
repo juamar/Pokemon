@@ -83,9 +83,9 @@ Damage = { [ (2 * Level / 5 + 2) * Attack * MovePower / Defense ] / 50 } * Effec
 - CRUD: moves
 - CRUD: My Pokemon (owned Pokemon instances)
 - CRUD: up to 4 moves assigned to an owned Pokemon
-- Query: moves of a given Pokemon
-- Query: possible moves for a given Pokemon
-- Query: Pokemon that share a given move
+- Query: moves of a given My Pokemon (its assigned moves)
+- Query: possible moves for a given Pokemon (candidate moves by type match)
+- Query: **Base Pokemon** that share a given move (PDF: "Consulta para obtener una lista con los Pokémons que comparten un mismo movimiento" — this targets the `BasePokemon` catalog, not `MyPokemon` owned instances)
 
 ### My Pokemon (V1 ownership rules)
 - References a base Pokemon (`BasePokemonId`).
@@ -98,7 +98,7 @@ Damage = { [ (2 * Level / 5 + 2) * Attack * MovePower / Defense ] / 50 } * Effec
 - Base Pokemon CRUD exists.
 - Moves CRUD exists.
 - My Pokemon CRUD exists; references a base Pokemon; up to 4 moves.
-- Queries exist for: a Pokemon's moves, possible moves for a Pokemon, Pokemon sharing a move.
+- Queries exist for: a My Pokemon's assigned moves, possible moves for a Pokemon, **Base Pokemon** sharing a move.
 
 ---
 
