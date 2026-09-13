@@ -36,7 +36,6 @@ The human must stay in control of every change — never batch multiple phases o
 
 - **Every unit of work that touches `Pokemons.Domain` logic (damage calculation, type effectiveness, battle rules, Battle Turn Orchestrator) must include its tests as part of the same unit** — write the test alongside (ideally before, per the TDD-vs-test-after split in `docs/architecture.md`) the implementation, not as a separate deferred step. A unit of work is not "done" until its relevant tests exist and pass.
 - **CRUD endpoints in `Pokedex.API`** get an integration test in the same unit that adds the endpoint (test-after is fine here, per `docs/architecture.md`), rather than shipping the endpoint untested.
-- **Coverage tooling (no Sonar available)**: run `./scripts/run-coverage.ps1` (optionally `-OpenReport`) at the end of a unit of work to run the full suite with `coverlet.collector` + `dotnet test --collect:"XPlat Code Coverage"` and generate a local HTML/summary report via `dotnet-reportgenerator-globaltool` under `./coveragereport`. Coverage focus is `Pokemons.Domain` (the pure logic), not EF/API plumbing.
 
 ## Docs reconciliation per unit of work
 
