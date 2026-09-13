@@ -9,6 +9,7 @@
 - [ ] Create `Pokemons.IntegrationTests` xUnit project (integration tests only).
 - [ ] Wire project references per `architecture.md`.
 - [ ] Add EF Core + SQLite packages to `Pokemons.Infra`.
+- [ ] Build the solution; confirm zero errors/warnings before moving to Phase 1 (no TDD here — this phase is pure project scaffolding with no domain logic yet to test).
 
 ## Phase 1 — Domain Model & Persistence (supports Part 2, prerequisite for Part 1)
 - [ ] Define entities in `Pokemons.Domain`: `BasePokemon`, `MyPokemon`, `Move`, `Battle`, `BattleAction`.
