@@ -10,7 +10,7 @@ The solution is being developed with a focus on:
 - testability,
 - and enough structure to support future evolution without overengineering V1.
 
-The formal exercise requirements are documented in `requirements.md`, which is the source of truth for the exercise specification.
+The formal exercise requirements are documented in [docs/requirements.md](docs/requirements.md), which is the source of truth for the exercise specification. See also [docs/architecture.md](docs/architecture.md) for the solution structure and [docs/plan.md](docs/plan.md) for the phased implementation roadmap.
 
 ---
 
@@ -49,7 +49,7 @@ The following assumptions are currently taken for V1:
 
 - **Code coverage** for unit tests is checked locally via `coverlet.collector` + `dotnet test --collect:"XPlat Code Coverage"`, summarized with `dotnet-reportgenerator-globaltool` (see `scripts/run-coverage.ps1`). Focused on `Pokemons.Domain` (the pure logic).
 - **Nexus IQ / Fortify** (or equivalent SCA/SAST scanning for dependencies, libraries, and security vulnerabilities) are **out of scope for V1** of this exercise.
-- **Full end-to-end QA** is **out of scope for V1** — only a happy-path smoke test (see `docs/smoke-test-plan.md`) is run as part of the V1 Definition of Done. The full E2E checklist is kept as backlog for a future hardening pass.
+- **Full end-to-end QA** is **out of scope for V1** — only smoke tests with enhanced scope (see [docs/smoke-test-plan.md](docs/smoke-test-plan.md)) is run as part of the V1 Definition of Done. The full E2E checklist is kept as backlog for a future hardening pass.
 
 ---
 
@@ -87,8 +87,9 @@ The following ideas are intentionally left for a future version:
 
 ## Notes
 
-- `requirements.md` is the source of truth for the exercise requirements.
+- [docs/requirements.md](docs/requirements.md) is the source of truth for the exercise requirements.
 - This README is a human-friendly overview of the project, current assumptions, V1 boundaries, and future ideas.
+- See also: [docs/architecture.md](docs/architecture.md), [docs/plan.md](docs/plan.md), [docs/smoke-test-plan.md](docs/smoke-test-plan.md).
 - **Damage calculation entry point (Part 1 core deliverable)**: `TBD — update once implemented, e.g. Pokemons.Domain/DamageCalculator.cs`.
 
 ### Questions for next interview session
