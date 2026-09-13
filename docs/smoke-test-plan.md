@@ -16,6 +16,7 @@ A single happy-path walkthrough proving the three parts work together, using **o
 - [ ] Create at least 2 `Move`s (different types/powers).
 - [ ] Retrieve a `Move` by id.
 - [ ] Create/confirm a `MyPokemon` **(Pokemon A, see table below)** with 1–2 moves assigned.
+- [ ] Assign up to 4 moves total to Pokemon A; confirm a 5th assignment is rejected.
 - [ ] Create a second `MyPokemon` **(Pokemon B, opponent, see table below)** the same way.
 - [ ] Query: moves of a given My Pokemon — returns the assigned moves.
 - [ ] Query: possible moves for a given Pokemon — returns expected candidate moves.
