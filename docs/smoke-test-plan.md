@@ -8,24 +8,32 @@
 
 ## Smoke Test (V1) — run this, not the full checklist
 
-A single happy-path walkthrough proving the three parts work together, using the 6 seeded Pokemon (one per type):
+A single happy-path walkthrough proving the three parts work together, using **only 2 of the 6 seeded Pokemon** (not all 6, and not all type combinations — just enough to prove the damage calculation is correct):
 
 - [ ] Create a `BasePokemon` (e.g., two different types to exercise effectiveness later) — or confirm seeded data already covers this (6 Pokemon, one per type, per V1 scope).
 - [ ] Retrieve the created `BasePokemon` by id.
 - [ ] Update a `BasePokemon` and confirm the change persists.
 - [ ] Create at least 2 `Move`s (different types/powers).
 - [ ] Retrieve a `Move` by id.
-- [ ] Create/confirm a `MyPokemon` (from seeded `BasePokemon`) with 1–2 moves assigned.
-- [ ] Create a second `MyPokemon` (opponent) the same way.
+- [ ] Create/confirm a `MyPokemon` **(Pokemon A, see table below)** with 1–2 moves assigned.
+- [ ] Create a second `MyPokemon` **(Pokemon B, opponent, see table below)** the same way.
 - [ ] Query: moves of a given My Pokemon — returns the assigned moves.
 - [ ] Query: possible moves for a given Pokemon — returns expected candidate moves.
 - [ ] Query: **Base Pokemon** sharing a given move — returns all `BasePokemon` with that move available/assigned (PDF: "Consulta para obtener una lista con los Pokémons que comparten un mismo movimiento" — targets `BasePokemon`, not `MyPokemon`).
-- [ ] Create a battle with both Pokemon + selected moves; confirm `Status = Started` immediately.
-- [ ] Execute one action for the Pokemon whose turn it is; confirm damage applied and HP updated.
+- [ ] Create a battle with Pokemon A + Pokemon B + the selected moves from the table below; confirm `Status = Started` immediately.
+- [ ] Execute the action from the table's first row; confirm damage falls within the expected range and HP updated accordingly.
 - [ ] Continue executing turns until one Pokemon's HP reaches 0.
 - [ ] Confirm battle transitions to `Status = Finished` with `WinnerPokemonId` set.
 - [ ] Query battle history after finish; confirm it's retrievable.
 - [ ] No unhandled exceptions/500s during the walkthrough.
+
+### Expected Damage Verification Table (used by the smoke test above)
+
+> **TBD — to be built in Phase 1 of `docs/plan.md`, once the 6 `BasePokemon` + `Move` seed data is finalized.** Only 1–2 rows are needed — just enough to prove the formula/effectiveness are correct for the specific Pokemon A vs. Pokemon B matchup used in the smoke test above. Not exhaustive, not all 6 Pokemon, not all type combinations. For each row, manually compute expected damage per the `requirements.md` §1 formula using the actual seeded Level/Attack/Defense/MovePower/type values.
+
+| Attacker (A or B) | Move (Type/Power) | Defender (A or B) | Effectiveness | Expected Damage (Random=85) | Expected Damage (Random=100) | Actual (recorded during smoke test) |
+|---|---|---|---|---|---|---|
+| _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | |
 
 ## When to execute
 
@@ -46,17 +54,9 @@ Either manually via Swagger UI for each API, or scripted via `.http` files / `Po
 
 > Scope note (confirmed with recruiter): only 6 `BasePokemon` (one per selected type) are seeded for V1. Exhaustive coverage of all 18x18 type-effectiveness combinations is **not required** — spot-check representative cases only (one weakness, one resistance/neutral) using the type pairs actually present among the 6 seeded Pokemon.
 
-- [ ] Damage produced during a battle action matches the documented formula for known inputs (spot-check one turn's damage against manual calculation) — verify against the **Expected Damage Verification Table** below.
+- [ ] Damage produced during a battle action matches the documented formula for known inputs (spot-check one turn's damage against manual calculation) — verify against the **Expected Damage Verification Table** in the Smoke Test section above.
 - [ ] Effectiveness multiplier is visibly applied for at least one weakness matchup among the seeded Pokemon (produces roughly double the damage of a neutral matchup, all else equal).
 - [ ] Random factor stays within 85–100% range across multiple executed turns.
-
-### Expected Damage Verification Table
-
-> **TBD — to be built in Phase 1 of `docs/plan.md`, once the 6 `BasePokemon` + `Move` seed data is finalized.** For 2–3 representative matchups (one weakness, one neutral), manually compute expected damage per the `requirements.md` §1 formula using the actual seeded Level/Attack/Defense/MovePower/type values, and record it here. Used to validate both the Phase 2 unit tests and this smoke test against real seed data, not arbitrary numbers.
-
-| Attacker | Move (Type/Power) | Defender | Effectiveness | Expected Damage (Random=85) | Expected Damage (Random=100) | Actual (recorded during smoke test) |
-|---|---|---|---|---|---|---|
-| _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | |
 
 ## Part 2 — Pokemon API (`Pokedex.API`)
 

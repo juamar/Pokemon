@@ -15,7 +15,7 @@
 - [ ] Define `TypeEffectiveness` lookup and seed data from the matrix in `requirements.md` §1.
 - [ ] Create `PokemonsDbContext` in `Pokemons.Infra` with EF configurations + SQLite.
 - [ ] Add initial migration + seed data: 6 `BasePokemon` (one per selected type, per `requirements.md` §5 assumption 11), a handful of `Move`s, and the full type chart.
-- [ ] **Build an expected-damage verification table** once seed data is finalized (6 Pokemon + moves): for 2–3 representative matchups (one weakness, one neutral, using the actual seeded Level/Attack/Defense/MovePower/type values), manually compute expected damage per the §1 formula and record it (e.g., in `docs/smoke-test-plan.md` or a small table in this file). This table is the source of truth used by both Phase 2 unit tests and the Phase 4 battle smoke test to confirm the damage calculation behaves as expected against real seed data, not just arbitrary numbers.
+- [ ] **Build an expected-damage verification table** once seed data is finalized (6 Pokemon + moves): pick **just 2 of the 6 seeded Pokemon** (one matchup, e.g. a weakness pair) that will be used in the Phase 4 smoke test battle, manually compute expected damage per the §1 formula using their actual seeded Level/Attack/Defense/MovePower/type values, and record it in `docs/smoke-test-plan.md`'s Smoke Test section. Not exhaustive — only the specific pair used in the smoke test, not all 6 Pokemon or all type combinations.
 
 ## Phase 2 — Damage Calculation (Part 1)
 - [ ] Define `IRandomProvider` in `Pokemons.Domain`; real impl (System.Random-based) + fixed/fake impl for tests.
