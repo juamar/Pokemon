@@ -43,7 +43,7 @@ Damage = { [ (2 * Level / 5 + 2) * Attack * MovePower / Defense ] / 50 } * Effec
 | `1/2` | Resistance | 0.5 |
 | `x0` | Immunity | 0 |
 
-> Full type-vs-type matrix below (transcribed from TypeEffectivenessMatrix.PNG). Row = attacking move type, Column = defending Pokemon type. The full matrix is seeded regardless of scope, but V1 seed data only uses 6 Pokemon (one per type, see §5 assumption 11) — tests only need to exercise the type pairs present among those 6, not the full matrix.
+> Full type-vs-type matrix below (transcribed from TypeEffectivenessMatrix.PNG). Row = attacking move type, Column = defending Pokemon type. The full matrix is seeded regardless of scope, but V1 seed data only uses 6 real Pokemon sourced from pokemondb.net (see §5 assumption 11) — tests only need to exercise the type pairs present among those 6, not the full matrix.
 
 #### Type Effectiveness Matrix
 
@@ -143,6 +143,13 @@ Switching Pokemon, multiplayer, items, abilities, status effects, accuracy, crit
 | Level | int |
 | TotalHP | int |
 | BaseAttack | int |
+| BaseDefense | int |
+| BaseSpecialAttack | int |
+| BaseSpecialDefense | int |
+| BaseSpeed | int |
+
+> **Implementation note (Phase 1):** `BaseDefense` was added during implementation — the §1 damage formula requires "Opponent Pokemon base defense" as an input, which was missing from this table. Same addition applies to `MyPokemon` below.
+> **Implementation note (correction):** `BaseSpecialAttack`, `BaseSpecialDefense`, and `BaseSpeed` were also missing from this table despite being listed in the exercise PDF's Pokemon field list (Puntos Ataque/Defensa Especial base, Puntos Velocidad base). They are now included on both `BasePokemon` and `MyPokemon` for spec completeness, even though the §1 damage formula only consumes `BaseAttack`/`BaseDefense` (V1 has no special-move-category distinction and no turn-order-by-speed rule — see §3 out-of-scope list).
 
 ### MyPokemon (owned instance)
 | Field | Type |
@@ -156,6 +163,10 @@ Switching Pokemon, multiplayer, items, abilities, status effects, accuracy, crit
 | CurrentHP | int |
 | TotalHP | int |
 | BaseAttack | int |
+| BaseDefense | int |
+| BaseSpecialAttack | int |
+| BaseSpecialDefense | int |
+| BaseSpeed | int |
 | Moves | up to 4, FK -> Move |
 
 ### Move
@@ -165,10 +176,18 @@ Switching Pokemon, multiplayer, items, abilities, status effects, accuracy, crit
 | Name | string |
 | Type | string |
 | Power | int |
-| BaseDefense | int |
-| BaseSpecialAttack | int |
-| BaseSpecialDefense | int |
-| BaseSpeed | int |
+
+### MyPokemonMove (join: a move assigned to an owned Pokemon)
+| Field | Type |
+|---|---|
+| Id | int/guid |
+| MyPokemonId | FK -> MyPokemon |
+| MoveId | FK -> Move |
+| Name | string |
+| Type | string |
+| Power | int |
+
+> **Implementation note:** `Name`/`Type`/`Power` are snapshotted from `Move` at assignment time, for the same reason `MyPokemon` snapshots its stats from `BasePokemon` (see "Deferred to V2 (Backlog)" in `architecture.md`) — editing the `Move` catalog later must not retroactively change the behavior of moves already assigned to an owned Pokemon, including ones mid-battle.
 
 ### Battle
 | Field | Type |
@@ -209,7 +228,7 @@ Type-vs-type effectiveness matrix (attacking type x defending type -> multiplier
 8. Random factor is controllable/injectable in tests for deterministic validation.
 9. `OwnerId` is a string.
 10. Trainers, users, and authentication are out of scope.
-11. **Seed data scope (confirmed with recruiter)**: V1 seed data includes only 6 `BasePokemon`, one per selected type (not all 18 types). The full type-effectiveness matrix is still seeded/persisted as-is (cheap, already transcribed), but only the type pairs actually represented among the 6 seeded Pokemon need to be exercised by tests/E2E — exhaustive coverage of all 18x18 type combinations is explicitly not required.
+11. **Seed data scope (confirmed with recruiter)**: V1 seed data includes only 6 `BasePokemon`, sourced from https://pokemondb.net/pokedex/all — National Dex #0004 Charmander, #0007 Squirtle, #0035 Clefairy, #0019 Rattata, #0023 Ekans, #0025 Pikachu (not all 18 types/species; Caterpie #0010 was swapped for Clefairy since it has too few attacking moves, and a second Veneno Pokemon was avoided since Ekans already covers that type). Moves are each Pokemon's "Moves learnt by level up" attacking moves (per-Pokemon page, e.g. https://pokemondb.net/pokedex/charmander#dex-evolution); one high-level move per Pokemon is intentionally left unseeded for manual addition during the smoke test. The full type-effectiveness matrix is still seeded/persisted as-is (cheap, already transcribed), but only the type pairs actually represented among the 6 seeded Pokemon need to be exercised by tests/E2E — exhaustive coverage of all 18x18 type combinations is explicitly not required.
 
 ## 6. Out of Scope (V1)
 

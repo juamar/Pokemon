@@ -14,16 +14,16 @@
 - [x] Build the solution; confirm zero errors/warnings before moving to Phase 1 (no TDD here — this phase is pure project scaffolding with no domain logic yet to test).
 
 ## Phase 1 — Domain Model & Persistence (supports Part 2, prerequisite for Part 1)
-- [ ] Define entities in `Pokemons.Domain`: `BasePokemon`, `MyPokemon`, `Move`, `Battle`, `BattleAction`.
-- [ ] Define `TypeEffectiveness` lookup and seed data from the matrix in `requirements.md` §1.
-- [ ] Create `PokemonsDbContext` in `Pokemons.Infra` with EF configurations + SQLite.
-- [ ] Add initial migration + seed data: 6 `BasePokemon` (one per selected type, per `requirements.md` §5 assumption 11), a handful of `Move`s, and the full type chart.
-- [ ] **Build an expected-damage verification table** once seed data is finalized (6 Pokemon + moves): pick **just 2 of the 6 seeded Pokemon** (one matchup, e.g. a weakness pair) that will be used in the Phase 4 smoke test battle, manually compute expected damage per the §1 formula using their actual seeded Level/Attack/Defense/MovePower/type values, and record it in `docs/smoke-test-plan.md`'s Smoke Test section. Not exhaustive — only the specific pair used in the smoke test, not all 6 Pokemon or all type combinations.
+- [x] Define entities in `Pokemons.Domain`: `BasePokemon`, `MyPokemon`, `Move`, `Battle`, `BattleAction` (plus `MyPokemonMove` join entity for the up-to-4-moves assignment).
+- [x] Define `TypeEffectiveness` lookup and seed data from the matrix in `requirements.md` §1.
+- [x] Create `PokemonsDbContext` in `Pokemons.Infra` with EF configurations + SQLite.
+- [x] Add initial migration + seed data: 6 `BasePokemon` sourced from pokemondb.net (Charmander, Squirtle, Clefairy, Rattata, Ekans, Pikachu — National Dex #0004/#0007/#0035/#0019/#0023/#0025, per `requirements.md` §5 assumption 11), their level-up attacking `Move`s, and the full type chart.
+- [x] **Build an expected-damage verification table** once seed data is finalized (6 Pokemon + moves): picked Charmander (Fuego) vs Bulbasaur (Planta) with Ember — a weakness matchup — computed expected damage per the §1 formula using the actual seeded Level/Attack/Defense/MovePower/type values, and recorded it in `docs/smoke-test-plan.md`'s Smoke Test section.
 
-## Phase 2 — Damage Calculation (Part 1)
-- [ ] Define `IRandomProvider` in `Pokemons.Domain`; real impl (System.Random-based) + fixed/fake impl for tests.
-- [ ] Implement damage formula service per `requirements.md` §1.
-- [ ] Unit tests (`Pokemons.Tests`): formula correctness, effectiveness multiplier application (representative cases only — one weakness/resistance/neutral/immunity, not all 18x18 combinations, per confirmed scope), random bounds (85–100), deterministic override in tests. Use the expected-damage verification table from Phase 1 as the source of truth for at least one test case, so it's checked against real seed data, not just hand-picked numbers.
+## Phase 2
+- [x] Define `IRandomProvider` in `Pokemons.Domain`; real impl (System.Random-based) + fixed/fake impl for tests.
+- [x] Implement damage formula service per `requirements.md` §1.
+- [x] Unit tests (`Pokemons.Tests`): formula correctness, effectiveness multiplier application (representative cases only — one weakness/resistance/neutral/immunity, not all 18x18 combinations, per confirmed scope), random bounds (85–100), deterministic override in tests. Use the expected-damage verification table from Phase 1 as the source of truth for at least one test case, so it's checked against real seed data, not just hand-picked numbers.
 
 ## Phase 3 — Pokemon API (Part 2) — `Pokedex.API`
 - [ ] CRUD endpoints: Base Pokemon, Moves, My Pokemon (+ up to 4 moves assignment).

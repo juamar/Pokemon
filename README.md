@@ -41,7 +41,7 @@ The following assumptions are currently taken for V1:
 8. The random factor can be controlled in tests for deterministic validation.
 9. `ownerId` is a string.
 10. Trainers, users, and authentication are out of scope for V1.
-11. Seed data for V1 includes only 6 Pokemon (one per selected type, confirmed with recruiter) — not all 18 types.
+11. Seed data for V1 includes only 6 real Pokemon sourced from pokemondb.net (Charmander, Squirtle, Clefairy, Rattata, Ekans, Pikachu — National Dex #0004/#0007/#0035/#0019/#0023/#0025, confirmed with recruiter) — not all 18 types/species, with their level-up attacking moves (one high-level move per Pokemon intentionally left unseeded for manual smoke-test addition).
 
 ---
 
@@ -82,6 +82,7 @@ The following ideas are intentionally left for a future version:
 - Items, abilities, status conditions, critical hits, weather
 - Richer battle analytics and replay features
 - Moving from a monolith to a distributed architecture if needed later
+- **Open pending topic: in-game (runtime) updates to `BasePokemon`/`Move` catalog data.** V1 has `MyPokemon` and `MyPokemonMove` snapshot their stats/move data from `BasePokemon`/`Move` at creation/assignment time, so editing a catalog entry later does not retroactively change already-owned Pokemon or already-assigned moves (see `docs/architecture.md` "Deferred to V2 (Backlog)" for the full rationale). For V2 we still need to decide the actual product behavior once catalog editing is a real, live-game feature: should species/move rebalances ever propagate to existing instances (explicit resync operation vs. always-live computed stats), and if so, how (opt-in per player, automatic, versioned)? This is currently unresolved and needs a design decision before it's implemented.
 
 ---
 

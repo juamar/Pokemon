@@ -12,7 +12,7 @@
 
 A single happy-path walkthrough proving the three parts work together, using **only 2 of the 6 seeded Pokemon** (not all 6, and not all type combinations — just enough to prove the damage calculation is correct):
 
-- [ ] Create a `BasePokemon` (e.g., two different types to exercise effectiveness later) — or confirm seeded data already covers this (6 Pokemon, one per type, per V1 scope).
+- [ ] Create a `BasePokemon` (e.g., two different types to exercise effectiveness later) — or confirm seeded data already covers this (6 Pokemon — Charmander, Squirtle, Clefairy, Rattata, Ekans, Pikachu — sourced from pokemondb.net, per V1 scope).
 - [ ] Retrieve the created `BasePokemon` by id.
 - [ ] Update a `BasePokemon` and confirm the change persists.
 - [ ] Create at least 2 `Move`s (different types/powers).
@@ -32,11 +32,15 @@ A single happy-path walkthrough proving the three parts work together, using **o
 
 ### Expected Damage Verification Table (used by the smoke test above)
 
-> **TBD — to be built in Phase 1 of `docs/plan.md`, once the 6 `BasePokemon` + `Move` seed data is finalized.** Only 1–2 rows are needed — just enough to prove the formula/effectiveness are correct for the specific Pokemon A vs. Pokemon B matchup used in the smoke test above. Not exhaustive, not all 6 Pokemon, not all type combinations. For each row, manually compute expected damage per the `requirements.md` §1 formula using the actual seeded Level/Attack/Defense/MovePower/type values.
+> Computed from the actual Phase 1 seed data (`Pokemons.Infra/Configurations/SeedData.cs`), sourced from https://pokemondb.net/pokedex/all. Pokemon A = Squirtle (seeded `BasePokemon` Id 2, Agua), Pokemon B = Charmander (seeded `BasePokemon` Id 1, Fuego) — a weakness matchup (Agua is x2 vs Fuego), chosen to also exercise the effectiveness multiplier.
+>
+> Formula: `Damage = { [ (2*Level/5 + 2) * Attack * MovePower / Defense ] / 50 } * Effectiveness * (Random/100)`
+> Inputs: Level=5, Attack=48 (Squirtle `BaseAttack`), MovePower=40 (Water Gun), Defense=43 (Charmander `BaseDefense`), Effectiveness=2 (Agua vs Fuego).
+> Base (before Random) = `(2*5/5+2) * 48 * 40 / 43 / 50 * 2` = `4 * 48 * 40 / 43 / 50 * 2` ≈ `7.1442`.
 
 | Attacker (A or B) | Move (Type/Power) | Defender (A or B) | Effectiveness | Expected Damage (Random=85) | Expected Damage (Random=100) | Actual (recorded during smoke test) |
 |---|---|---|---|---|---|---|
-| _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | |
+| A (Squirtle) | Water Gun (Agua/40) | B (Charmander) | x2 (weakness) | ≈6.07 (6, if truncated) | ≈7.14 (7, if truncated) | |
 
 ## When to execute
 
@@ -55,7 +59,7 @@ Either manually via Swagger UI for each API, or scripted via `.http` files / `Po
 
 ## Part 1 — Damage Calculation (verified via unit tests, sanity-checked here through battle flow)
 
-> Scope note (confirmed with recruiter): only 6 `BasePokemon` (one per selected type) are seeded for V1. Exhaustive coverage of all 18x18 type-effectiveness combinations is **not required** — spot-check representative cases only (one weakness, one resistance/neutral) using the type pairs actually present among the 6 seeded Pokemon.
+> Scope note (confirmed with recruiter): only 6 `BasePokemon` (Charmander, Squirtle, Clefairy, Rattata, Ekans, Pikachu — National Dex #0004/#0007/#0035/#0019/#0023/#0025, sourced from pokemondb.net) are seeded for V1. Exhaustive coverage of all 18x18 type-effectiveness combinations is **not required** — spot-check representative cases only (one weakness, one resistance/neutral) using the type pairs actually present among the 6 seeded Pokemon.
 
 - [ ] Damage produced during a battle action matches the documented formula for known inputs (spot-check one turn's damage against manual calculation) — verify against the **Expected Damage Verification Table** in the Smoke Test section above.
 - [ ] Effectiveness multiplier is visibly applied for at least one weakness matchup among the seeded Pokemon (produces roughly double the damage of a neutral matchup, all else equal).
