@@ -27,6 +27,7 @@ Keep it simple. No Clean Architecture ceremony, no CQRS/MediatR, no interfaces "
 The human must stay in control of every change — never batch multiple phases or unrelated concerns into one uninterrupted run.
 
 - **One unit of work = one `docs/plan.md` step (or a single, clearly-scoped sub-task)**, not a whole phase and not the whole plan. Stop after completing a unit and let the human review before continuing to the next.
+- **CRITICAL: Do NOT stage, commit, or push changes without explicit user approval.** Always present your changes and wait for the human to review and say "commit" or "push" before executing any git operations. This is non-negotiable.
 - **Pause for review before committing or moving to the next unit.** Do not chain "implement → commit → next step" without an explicit go-ahead. Committing/pushing to git only happens when the human asks for it.
 - **Call out new interfaces, services, repositories, or other abstractions explicitly** in the response the moment they're introduced — don't let them appear silently inside a larger multi-file diff.
 - **Prefer several small diffs over one large one.** If a task naturally spans multiple files/projects, sequence the edits and summarize each before moving on, rather than editing everything and presenting it all at once.
