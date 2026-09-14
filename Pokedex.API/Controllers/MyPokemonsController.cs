@@ -153,7 +153,7 @@ public class MyPokemonsController(
     }
 
     [HttpGet("{id:int}/moves")]
-    public async Task<ActionResult<List<MyPokemonMove>>> GetMovesByMyPokemonId(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<List<MyPokemonMoveSummaryResponse>>> GetMovesByMyPokemonId(int id, CancellationToken cancellationToken)
     {
         var myPokemon = await myPokemonRepository.GetByIdAsync(id, cancellationToken);
 
@@ -162,7 +162,17 @@ public class MyPokemonsController(
             return NotFound("MyPokemon not found.");
         }
 
-        return Ok(myPokemon.Moves);
+        var moves = myPokemon.Moves
+            .Select(m => new MyPokemonMoveSummaryResponse
+            {
+                MoveId = m.MoveId,
+                Name = m.Name,
+                Type = m.Type,
+                Power = m.Power
+            })
+            .ToList();
+
+        return Ok(moves);
     }
 
     [HttpDelete("{id:int}/moves/{moveId:int}")]
@@ -210,5 +220,13 @@ public class MyPokemonsController(
     public sealed class AssignMoveRequest
     {
         public int MoveId { get; set; }
+    }
+
+    public sealed class MyPokemonMoveSummaryResponse
+    {
+        public int MoveId { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public int Power { get; set; }
     }
 }

@@ -1,1 +1,170 @@
-@Battles.API_HostAddress = http://localhost:5169
+@pokedexHost = http://localhost:5156
+@battlesHost = http://localhost:5169
+
+@ownerA = smoke-trainer-a
+@ownerB = smoke-trainer-b
+
+### Set these manually from Pokedex smoke responses
+@myPokemonAId = 1
+@myPokemonBId = 2
+@battleMoveId = 1
+@battleId = 1
+
+### 1) Get MyPokemons (find ids by owner)
+GET {{pokedexHost}}/api/my-pokemons
+
+### Copy ids into @myPokemonAId and @myPokemonBId
+
+### 2) Get moves (choose a valid move id)
+GET {{pokedexHost}}/api/moves
+
+### Copy a move id into @battleMoveId (prefer SmokeMoveA if present)
+
+### 3) Create battle
+POST {{battlesHost}}/api/battles
+Content-Type: application/json
+
+{
+  "pokemon1Id": {{myPokemonAId}},
+  "pokemon2Id": {{myPokemonBId}}
+}
+
+### Copy response.body.id into @battleId
+
+### 4) Get battle state
+GET {{battlesHost}}/api/battles/{{battleId}}
+
+### 5) Execute action - Pokemon B (It is not this Pokemon's turn)
+POST {{battlesHost}}/api/battles/{{battleId}}/actions
+Content-Type: application/json
+
+{
+  "actingPokemonId": {{myPokemonBId}},
+  "moveId": {{battleMoveId}}
+}
+
+### 5) Execute action - Any other (It is not this Pokemon's turn)
+POST {{battlesHost}}/api/battles/{{battleId}}/actions
+Content-Type: application/json
+
+{
+  "actingPokemonId": {{myPokemonBId}},
+  "moveId": {{battleMoveId}}
+}
+
+### 5) Execute action - Pokemon A (alternate with request 7 until finished)
+POST {{battlesHost}}/api/battles/{{battleId}}/actions
+Content-Type: application/json
+
+{
+  "actingPokemonId": {{myPokemonAId}},
+  "moveId": {{battleMoveId}}
+}
+
+### 5) Get battle state
+GET {{battlesHost}}/api/battles/{{battleId}}
+
+### 7) Execute action - Pokemon B
+POST {{battlesHost}}/api/battles/{{battleId}}/actions
+Content-Type: application/json
+
+{
+  "actingPokemonId": {{myPokemonBId}},
+  "moveId": {{battleMoveId}}
+}
+
+### 8) Check final state (repeat actions above until status = Finished)
+GET {{battlesHost}}/api/battles/{{battleId}}
+
+### 9) Post-finish action should be rejected
+POST {{battlesHost}}/api/battles/{{battleId}}/actions
+Content-Type: application/json
+
+{
+  "actingPokemonId": {{myPokemonAId}},
+  "moveId": {{battleMoveId}}
+}
+
+### 10) History must be queryable after finish
+GET {{battlesHost}}/api/battles/{{battleId}}/history
+
+
+### -----------------------------
+### Deterministic damage check (Squirtle Water Gun -> Charmander)
+### Expected damage range: 6..7 (from seeded stats + formula)
+### -----------------------------
+
+@damageOwnerA = damage-check-attacker-http
+@damageOwnerB = damage-check-defender-http
+@damageSquirtleMyPokemonId = 6
+@damageCharmanderMyPokemonId = 7
+@damageBattleId = 3
+
+### 11) Create MyPokemon attacker: Squirtle (BasePokemonId = 2)
+POST {{pokedexHost}}/api/my-pokemons
+Content-Type: application/json
+
+{
+  "ownerId": "{{damageOwnerA}}",
+  "basePokemonId": 2,
+  "name": "Damage-Squirtle-HTTP"
+}
+
+### Copy response.body.id into @damageSquirtleMyPokemonId
+
+### 12) Create MyPokemon defender: Charmander (BasePokemonId = 1)
+POST {{pokedexHost}}/api/my-pokemons
+Content-Type: application/json
+
+{
+  "ownerId": "{{damageOwnerB}}",
+  "basePokemonId": 1,
+  "name": "Damage-Charmander-HTTP"
+}
+
+### Copy response.body.id into @damageCharmanderMyPokemonId
+
+### 13) Assign Water Gun (MoveId = 10) to Squirtle
+POST {{pokedexHost}}/api/my-pokemons/{{damageSquirtleMyPokemonId}}/moves
+Content-Type: application/json
+
+{
+  "moveId": 10
+}
+
+### 14) Assign Ember (MoveId = 5) to Charmander
+POST {{pokedexHost}}/api/my-pokemons/{{damageCharmanderMyPokemonId}}/moves
+Content-Type: application/json
+
+{
+  "moveId": 5
+}
+
+### 15) Create battle (Squirtle first so it attacks first turn)
+POST {{battlesHost}}/api/battles
+Content-Type: application/json
+
+{
+  "pokemon1Id": {{damageSquirtleMyPokemonId}},
+  "pokemon2Id": {{damageCharmanderMyPokemonId}}
+}
+
+### Copy response.body.id into @damageBattleId
+
+### 16) Execute first action: Squirtle uses Water Gun (MoveId = 10)
+POST {{battlesHost}}/api/battles/{{damageBattleId}}/actions
+Content-Type: application/json
+
+{
+  "actingPokemonId": {{damageSquirtleMyPokemonId}},
+  "moveId": 10
+}
+
+### Verify in response: damageDealt should be 6 or 7
+
+### 17) Get battle state and verify Charmander HP
+GET {{battlesHost}}/api/battles/{{damageBattleId}}
+
+### Verify in response:
+### - Pokemon2 totalHP is 39 (Charmander seed)
+### - Pokemon2 currentHP is 33 or 32 (39 - damage)

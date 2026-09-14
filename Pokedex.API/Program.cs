@@ -21,6 +21,8 @@ builder.Services.AddPokemonsPersistence(builder.Configuration);
 
 var app = builder.Build();
 
+await app.Services.ApplyPokemonsMigrationsAsync();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

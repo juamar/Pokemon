@@ -1,1 +1,170 @@
-@Pokedex.API_HostAddress = http://localhost:5156
+@pokedexHost = http://localhost:5156
+
+@ownerA = smoke-trainer-a
+@ownerB = smoke-trainer-b
+
+### Set these manually from previous responses when needed
+@createdBaseId = 7
+@createdMoveAId = 36
+@createdMoveBId = 37
+@basePokemonAId = 1
+@basePokemonBId = 2
+@myPokemonAId = 1
+@myPokemonBId = 2
+@m1 = 1
+@m2 = 2
+@m3 = 3
+@m4 = 4
+@m5 = 5
+
+### 1) BasePokemon create
+POST {{pokedexHost}}/api/base-pokemons
+Content-Type: application/json
+
+{
+  "name": "SmokeMon",
+  "type": "Agua",
+  "level": 8,
+  "totalHP": 52,
+  "baseAttack": 46,
+  "baseDefense": 43,
+  "baseSpecialAttack": 50,
+  "baseSpecialDefense": 50,
+  "baseSpeed": 44
+}
+
+### Copy response.body.id into @createdBaseId
+
+### 2) BasePokemon get by id
+GET {{pokedexHost}}/api/base-pokemons/{{createdBaseId}}
+
+### 3) BasePokemon update
+PUT {{pokedexHost}}/api/base-pokemons/{{createdBaseId}}
+Content-Type: application/json
+
+{
+  "name": "SmokeMon-Updated",
+  "type": "Agua",
+  "level": 10,
+  "totalHP": 54,
+  "baseAttack": 48,
+  "baseDefense": 44,
+  "baseSpecialAttack": 51,
+  "baseSpecialDefense": 51,
+  "baseSpeed": 45
+}
+
+### 4) Create move #1
+POST {{pokedexHost}}/api/moves
+Content-Type: application/json
+
+{
+  "name": "SmokeMoveA",
+  "type": "Agua",
+  "power": 40
+}
+
+### Copy response.body.id into @createdMoveAId
+
+### 5) Create move #2
+POST {{pokedexHost}}/api/moves
+Content-Type: application/json
+
+{
+  "name": "SmokeMoveB",
+  "type": "Fuego",
+  "power": 45
+}
+
+### Copy response.body.id into @createdMoveBId
+
+### 6) Get move by id
+GET {{pokedexHost}}/api/moves/{{createdMoveAId}}
+
+### 7) Get seeded base pokemons (for valid ids)
+GET {{pokedexHost}}/api/base-pokemons
+
+### Copy response.body[0].id into @basePokemonAId and response.body[1].id into @basePokemonBId
+
+### 8) Create MyPokemon A
+POST {{pokedexHost}}/api/my-pokemons
+Content-Type: application/json
+
+{
+  "ownerId": "{{ownerA}}",
+  "basePokemonId": {{basePokemonAId}},
+  "name": "Smoke-A"
+}
+
+### Copy response.body.id into @myPokemonAId
+
+### 9) Create MyPokemon B
+POST {{pokedexHost}}/api/my-pokemons
+Content-Type: application/json
+
+{
+  "ownerId": "{{ownerB}}",
+  "basePokemonId": {{basePokemonBId}},
+  "name": "Smoke-B"
+}
+
+### Copy response.body.id into @myPokemonBId
+
+### 10) Get all moves (grab first 5 ids)
+GET {{pokedexHost}}/api/moves
+
+### Copy first 5 move ids into @m1..@m5 from response array
+
+### 11) Assign 4 moves to MyPokemon A
+POST {{pokedexHost}}/api/my-pokemons/{{myPokemonAId}}/moves
+Content-Type: application/json
+
+{ "moveId": {{m1}} }
+
+###
+POST {{pokedexHost}}/api/my-pokemons/{{myPokemonAId}}/moves
+Content-Type: application/json
+
+{ "moveId": {{m2}} }
+
+###
+POST {{pokedexHost}}/api/my-pokemons/{{myPokemonAId}}/moves
+Content-Type: application/json
+
+{ "moveId": {{m3}} }
+
+###
+POST {{pokedexHost}}/api/my-pokemons/{{myPokemonAId}}/moves
+Content-Type: application/json
+
+{ "moveId": {{m4}} }
+
+### 12) 5th move should be rejected
+POST {{pokedexHost}}/api/my-pokemons/{{myPokemonAId}}/moves
+Content-Type: application/json
+
+{ "moveId": {{m5}} }
+
+### 13) Assign at least one move to MyPokemon B
+POST {{pokedexHost}}/api/my-pokemons/{{myPokemonBId}}/moves
+Content-Type: application/json
+
+{ "moveId": {{m1}} }
+
+### 14) Query moves for MyPokemon A
+GET {{pokedexHost}}/api/my-pokemons/{{myPokemonAId}}/moves
+
+### 15) Query possible moves for base pokemon A
+GET {{pokedexHost}}/api/base-pokemons/{{basePokemonAId}}/possible-moves
+
+### 16) Query base pokemons by move id
+GET {{pokedexHost}}/api/base-pokemons/by-move/{{m1}}
+
+### 17) Query base pokemons by move id and show more than 1
+GET {{pokedexHost}}/api/base-pokemons/by-move/10
+
+### 18) Query base pokemons by move id and show none
+GET {{pokedexHost}}/api/base-pokemons/by-move/3
+
+### Battle smoke tests moved to Battles.API/Battles.API.http
+### Run that file after this one to continue the end-to-end smoke flow.

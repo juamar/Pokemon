@@ -109,6 +109,56 @@ public class BattlesCreationAndStateQueryTests(BattleApisFixture fixture) : ICla
     }
 
     [Fact]
+    public async Task ExecuteAction_SquirtleWaterGunVsCharmander_UsesExpectedDamageRange()
+    {
+        const int charmanderBasePokemonId = 1;
+        const int squirtleBasePokemonId = 2;
+        const int emberMoveId = 5;
+        const int waterGunMoveId = 10;
+
+        var squirtle = await CreateMyPokemonWithSpecificMoveAsync(
+            ownerId: "damage-check-attacker",
+            name: "Damage-Squirtle",
+            basePokemonId: squirtleBasePokemonId,
+            moveId: waterGunMoveId);
+
+        var charmander = await CreateMyPokemonWithSpecificMoveAsync(
+            ownerId: "damage-check-defender",
+            name: "Damage-Charmander",
+            basePokemonId: charmanderBasePokemonId,
+            moveId: emberMoveId);
+
+        var createBattleResponse = await _battlesClient.PostAsJsonAsync("/api/battles", new CreateBattleRequest
+        {
+            Pokemon1Id = squirtle.Id,
+            Pokemon2Id = charmander.Id
+        });
+
+        var battle = await createBattleResponse.Content.ReadFromJsonAsync<BattleCreatedDto>();
+        Assert.NotNull(battle);
+
+        var executeResponse = await _battlesClient.PostAsJsonAsync($"/api/battles/{battle!.Id}/actions", new ExecuteBattleActionRequest
+        {
+            ActingPokemonId = squirtle.Id,
+            MoveId = waterGunMoveId
+        });
+
+        Assert.Equal(HttpStatusCode.OK, executeResponse.StatusCode);
+
+        var execution = await executeResponse.Content.ReadFromJsonAsync<BattleActionExecutionDto>();
+        Assert.NotNull(execution);
+        Assert.InRange(execution!.DamageDealt, 6, 7);
+
+        var stateResponse = await _battlesClient.GetAsync($"/api/battles/{battle.Id}");
+        var state = await stateResponse.Content.ReadFromJsonAsync<BattleStateDto>();
+        Assert.NotNull(state);
+
+        var defender = state!.Pokemon2;
+        Assert.NotNull(defender);
+        Assert.Equal(39 - execution.DamageDealt, defender!.CurrentHP);
+    }
+
+    [Fact]
     public async Task ExecuteAction_OutOfTurn_ReturnsBadRequest()
     {
         var pokemon1 = await CreateMyPokemonWithAssignedMoveAsync("battle-trainer-7", "Eta");
@@ -296,6 +346,32 @@ public class BattlesCreationAndStateQueryTests(BattleApisFixture fixture) : ICla
         Assert.NotEmpty(assignedMoves);
 
         return assignedMoves![0].MoveId;
+    }
+
+    private async Task<MyPokemonDto> CreateMyPokemonWithSpecificMoveAsync(
+        string ownerId,
+        string name,
+        int basePokemonId,
+        int moveId)
+    {
+        var createMyPokemonResponse = await _pokedexClient.PostAsJsonAsync("/api/my-pokemons", new CreateMyPokemonRequest
+        {
+            OwnerId = ownerId,
+            BasePokemonId = basePokemonId,
+            Name = name
+        });
+        Assert.Equal(HttpStatusCode.Created, createMyPokemonResponse.StatusCode);
+
+        var myPokemon = await createMyPokemonResponse.Content.ReadFromJsonAsync<MyPokemonDto>();
+        Assert.NotNull(myPokemon);
+
+        var assignResponse = await _pokedexClient.PostAsJsonAsync(
+            $"/api/my-pokemons/{myPokemon!.Id}/moves",
+            new AssignMoveRequest { MoveId = moveId });
+
+        Assert.Equal(HttpStatusCode.Created, assignResponse.StatusCode);
+
+        return myPokemon;
     }
 
     public sealed class CreateBattleRequest

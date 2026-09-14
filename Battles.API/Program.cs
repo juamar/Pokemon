@@ -19,6 +19,8 @@ builder.Services.AddScoped<DamageCalculator>();
 
 var app = builder.Build();
 
+await app.Services.ApplyPokemonsMigrationsAsync();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

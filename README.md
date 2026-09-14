@@ -17,13 +17,77 @@ The formal exercise requirements are documented in [docs/requirements.md](docs/r
 ## Tech Stack
 
 ### Current / Planned
-- **.NET 10**
-- **SQLite** for persistence
+**Current (implemented in V1):**
+- .NET 10 (`net10.0`)
+- ASP.NET Core Web API (separate `Pokedex.API` and `Battles.API`)
+- EF Core + SQLite persistence
+- xUnit unit and integration testing
+
+**Planned (future/backlog):**
+- Auth/users/trainers
+- Advanced battle mechanics (abilities, items, weather, etc.)
+- Potential architecture evolution for larger scale (if needed)
 
 ### Libraries / Tools
-As the project evolves, this section should be updated to reflect the actual libraries and packages used.
+- `Microsoft.EntityFrameworkCore.Sqlite` `10.0.12`
+- `Microsoft.EntityFrameworkCore.Design` `10.0.12`
+- `Swashbuckle.AspNetCore` `10.2.3`
+- `Scalar.AspNetCore` `2.17.3`
+- `xunit` `2.9.3`
+- `xunit.runner.visualstudio` `3.1.4`
+- `Microsoft.NET.Test.Sdk` `17.14.1`
+- `Microsoft.AspNetCore.Mvc.Testing` `10.0.12`
+- `coverlet.collector` `6.0.4`
 
-- TBD
+---
+
+## How to run
+
+### 1) Restore
+From solution root:
+
+```bash
+dotnet restore Pokemon.slnx
+```
+
+### 2) Run each API
+Run each API in a separate terminal:
+
+```bash
+dotnet run --project Pokedex.API/Pokedex.API.csproj
+dotnet run --project Battles.API/Battles.API.csproj
+```
+
+### 3) API URLs
+- **Pokedex API base URL**: `http://localhost:5156`
+- **Battles API base URL**: `http://localhost:5169`
+
+### 4) OpenAPI/Scalar URLs
+- **Pokedex OpenAPI JSON**: `http://localhost:5156/swagger/v1/swagger.json`
+- **Pokedex Scalar UI**: `http://localhost:5156/scalar`
+- **Battles OpenAPI JSON**: `http://localhost:5169/swagger/v1/swagger.json`
+- **Battles Scalar UI**: `http://localhost:5169/scalar`
+
+### 5) Run tests
+
+```bash
+dotnet test Pokemon.slnx
+```
+
+Or run by project:
+
+```bash
+dotnet test Pokemons.Tests/Pokemons.Tests.csproj
+dotnet test Pokemons.IntegrationTests/Pokemons.IntegrationTests.csproj
+```
+
+### Troubleshooting: database/migrations
+Migrations are applied automatically at API startup. If your local DB is out of sync, you can run EF manually:
+
+```bash
+dotnet ef database update --project Pokemons.Infra/Pokemons.Infra.csproj --startup-project Pokedex.API/Pokedex.API.csproj
+dotnet ef database update --project Pokemons.Infra/Pokemons.Infra.csproj --startup-project Battles.API/Battles.API.csproj
+```
 
 ---
 
@@ -83,7 +147,7 @@ The following ideas are intentionally left for a future version:
 - [docs/requirements.md](docs/requirements.md) is the source of truth for the exercise requirements.
 - This README is a human-friendly overview of the project, current assumptions, V1 boundaries, and future ideas.
 - See also: [docs/architecture.md](docs/architecture.md), [docs/plan.md](docs/plan.md), [docs/smoke-test-plan.md](docs/smoke-test-plan.md).
-- **Damage calculation entry point (Part 1 core deliverable)**: `TBD — update once implemented, e.g. Pokemons.Domain/DamageCalculator.cs`.
+- **Damage calculation entry point (Part 1 core deliverable)**: `Pokemons.Domain/DamageCalculator.cs` (`DamageCalculator.CalculateAsync(...)`).
 
 ### Questions for next interview session
 

@@ -12,23 +12,23 @@
 
 A single happy-path walkthrough proving the three parts work together, using **only 2 of the 6 seeded Pokemon** (not all 6, and not all type combinations — just enough to prove the damage calculation is correct):
 
-- [ ] Create a `BasePokemon` (e.g., two different types to exercise effectiveness later) — or confirm seeded data already covers this (6 Pokemon — Charmander, Squirtle, Clefairy, Rattata, Ekans, Pikachu — sourced from pokemondb.net, per V1 scope).
-- [ ] Retrieve the created `BasePokemon` by id.
-- [ ] Update a `BasePokemon` and confirm the change persists.
-- [ ] Create at least 2 `Move`s (different types/powers).
-- [ ] Retrieve a `Move` by id.
-- [ ] Create/confirm a `MyPokemon` **(Pokemon A, see table below)** with 1–2 moves assigned.
-- [ ] Assign up to 4 moves total to Pokemon A; confirm a 5th assignment is rejected.
-- [ ] Create a second `MyPokemon` **(Pokemon B, opponent, see table below)** the same way.
-- [ ] Query: moves of a given My Pokemon — returns the assigned moves.
-- [ ] Query: possible moves for a given Pokemon — returns expected candidate moves.
-- [ ] Query: **Base Pokemon** sharing a given move — returns all `BasePokemon` with that move available/assigned (PDF: "Consulta para obtener una lista con los Pokémons que comparten un mismo movimiento" — targets `BasePokemon`, not `MyPokemon`).
-- [ ] Create a battle with Pokemon A + Pokemon B; confirm `Status = Started` immediately (moves are used from each `MyPokemon`'s assigned move set during turns).
-- [ ] Execute the action from the table's first row; confirm damage falls within the expected range and HP updated accordingly.
-- [ ] Continue executing turns until one Pokemon's HP reaches 0.
-- [ ] Confirm battle transitions to `Status = Finished` with `WinnerPokemonId` set.
-- [ ] Query battle history after finish; confirm it's retrievable.
-- [ ] No unhandled exceptions/500s during the walkthrough.
+- [x] Create a `BasePokemon` (e.g., two different types to exercise effectiveness later) — or confirm seeded data already covers this (6 Pokemon — Charmander, Squirtle, Clefairy, Rattata, Ekans, Pikachu — sourced from pokemondb.net, per V1 scope).
+- [x] Retrieve the created `BasePokemon` by id.
+- [x] Update a `BasePokemon` and confirm the change persists.
+- [x] Create at least 2 `Move`s (different types/powers).
+- [x] Retrieve a `Move` by id.
+- [x] Create/confirm a `MyPokemon` **(Pokemon A, see table below)** with 1–2 moves assigned.
+- [x] Assign up to 4 moves total to Pokemon A; confirm a 5th assignment is rejected.
+- [x] Create a second `MyPokemon` **(Pokemon B, opponent, see table below)** the same way.
+- [x] Query: moves of a given My Pokemon — returns the assigned moves.
+- [x] Query: possible moves for a given Pokemon — returns expected candidate moves.
+- [x] Query: **Base Pokemon** sharing a given move — returns all `BasePokemon` with that move available/assigned (PDF: "Consulta para obtener una lista con los Pokémons que comparten un mismo movimiento" — targets `BasePokemon`, not `MyPokemon`).
+- [x] Create a battle with Pokemon A + Pokemon B; confirm `Status = Started` immediately (moves are used from each `MyPokemon`'s assigned move set during turns).
+- [x] Execute the action from the table's first row; confirm damage falls within the expected range and HP updated accordingly.
+- [x] Continue executing turns until one Pokemon's HP reaches 0.
+- [x] Confirm battle transitions to `Status = Finished` with `WinnerPokemonId` set.
+- [x] Query battle history after finish; confirm it's retrievable.
+- [x] No unhandled exceptions/500s during the walkthrough.
 
 ### Expected Damage Verification Table (used by the smoke test above)
 
