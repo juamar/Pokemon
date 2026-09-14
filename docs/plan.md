@@ -32,7 +32,7 @@
 - [x] Integration tests (`Pokemons.IntegrationTests`) for all endpoints.
 
 ## Phase 4 — Battle State API (Part 3) — `Battles.API`
-- [ ] Battle creation: initializes two My Pokemon + selected moves, status `Started`.
+- [x] Battle creation: initializes two My Pokemon, status `Started` (moves come from each MyPokemon's assigned move set; no per-battle selected-move payload).
 - [ ] Turn/action execution endpoint: validate turn order, apply damage via Phase 2 service, persist `BattleAction`, update HP, check finish condition.
 - [ ] Finish transition: set `Finished`, `WinnerPokemonId`, `FinishedAt`; reject further actions.
 - [ ] Query endpoints: battle state, battle history.

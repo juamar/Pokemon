@@ -1,3 +1,5 @@
+extern alias PokedexApi;
+
 using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Hosting;
@@ -127,7 +129,7 @@ public class BasePokemonsCrudTests(PokedexApiFactory factory) : IClassFixture<Po
     }
 }
 
-public sealed class PokedexApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public sealed class PokedexApiFactory : WebApplicationFactory<PokedexApi::Program>, IAsyncLifetime
 {
     private readonly string _databasePath = Path.Combine(Path.GetTempPath(), $"pokedex-integration-{Guid.NewGuid():N}.db");
 

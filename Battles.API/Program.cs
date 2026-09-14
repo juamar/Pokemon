@@ -30,3 +30,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Exposed for integration tests that bootstrap this API via WebApplicationFactory<Program>.
+public partial class Program;

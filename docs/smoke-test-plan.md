@@ -23,7 +23,7 @@ A single happy-path walkthrough proving the three parts work together, using **o
 - [ ] Query: moves of a given My Pokemon — returns the assigned moves.
 - [ ] Query: possible moves for a given Pokemon — returns expected candidate moves.
 - [ ] Query: **Base Pokemon** sharing a given move — returns all `BasePokemon` with that move available/assigned (PDF: "Consulta para obtener una lista con los Pokémons que comparten un mismo movimiento" — targets `BasePokemon`, not `MyPokemon`).
-- [ ] Create a battle with Pokemon A + Pokemon B + the selected moves from the table below; confirm `Status = Started` immediately.
+- [ ] Create a battle with Pokemon A + Pokemon B; confirm `Status = Started` immediately (moves are used from each `MyPokemon`'s assigned move set during turns).
 - [ ] Execute the action from the table's first row; confirm damage falls within the expected range and HP updated accordingly.
 - [ ] Continue executing turns until one Pokemon's HP reaches 0.
 - [ ] Confirm battle transitions to `Status = Finished` with `WinnerPokemonId` set.

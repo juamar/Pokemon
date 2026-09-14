@@ -105,7 +105,7 @@ Damage = { [ (2 * Level / 5 + 2) * Attack * MovePower / Defense ] / 50 } * Effec
 ## 3. Battle State API (Part 3)
 
 ### Lifecycle
-Two states only: `Started`, `Finished`. No "not started" state — battle starts immediately on creation with both Pokemon, their selected moves, and required fight data.
+Two states only: `Started`, `Finished`. No "not started" state — battle starts immediately on creation with both Pokemon and required fight data; each turn uses moves already assigned to each `MyPokemon`.
 
 ### Rules
 | Rule | Behavior |

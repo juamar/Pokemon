@@ -20,7 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pokedex.API\Pokedex.API.csproj" />
+    <ProjectReference Include="..\Pokedex.API\Pokedex.API.csproj" Aliases="PokedexApi" />
+    <ProjectReference Include="..\Battles.API\Battles.API.csproj" Aliases="BattlesApi" />
     <ProjectReference Include="..\Pokemons.Infra\Pokemons.Infra.csproj" />
   </ItemGroup>
 
