@@ -26,10 +26,10 @@
 - [x] Unit tests (`Pokemons.Tests`): formula correctness, effectiveness multiplier application (representative cases only — one weakness/resistance/neutral/immunity, not all 18x18 combinations, per confirmed scope), random bounds (85–100), deterministic override in tests. Use the expected-damage verification table from Phase 1 as the source of truth for at least one test case, so it's checked against real seed data, not just hand-picked numbers.
 
 ## Phase 3 — Pokemon API (Part 2) — `Pokedex.API`
-- [ ] CRUD endpoints: Base Pokemon, Moves, My Pokemon (+ up to 4 moves assignment).
-- [ ] Query endpoints: moves of a My Pokemon, possible moves for a Pokemon, **Base Pokemon** sharing a move (PDF: "Consulta para obtener una lista con los Pokémons que comparten un mismo movimiento" — targets `BasePokemon`, not `MyPokemon`).
-- [ ] Validation: My Pokemon references valid base Pokemon; max 4 moves.
-- [ ] Integration tests (`Pokemons.IntegrationTests`) for all endpoints.
+- [x] CRUD endpoints: Base Pokemon, Moves, My Pokemon (+ up to 4 moves assignment).
+- [x] Query endpoints: moves of a My Pokemon, possible moves for a Pokemon, **Base Pokemon** sharing a move (PDF: "Consulta para obtener una lista con los Pokémons que comparten un mismo movimiento" — targets `BasePokemon`, not `MyPokemon`).
+- [x] Validation: My Pokemon references valid base Pokemon; max 4 moves.
+- [x] Integration tests (`Pokemons.IntegrationTests`) for all endpoints.
 
 ## Phase 4 — Battle State API (Part 3) — `Battles.API`
 - [ ] Battle creation: initializes two My Pokemon + selected moves, status `Started`.

@@ -73,6 +73,7 @@ The following ideas are intentionally left for a future version:
 - Items, abilities, status conditions, critical hits, weather
 - Richer battle analytics and replay features
 - Moving from a monolith to a distributed architecture if needed later
+- **Query ambiguity clarification**: The PDF requirement "Pokémons que comparten un mismo movimiento" is currently interpreted in V1 as BasePokemons (catalog) that share a move type, useful for team-building discovery. V2 may also extend this to owned MyPokemons (e.g., "which of my Pokemon know this move?") for in-battle move management. Both queries could coexist depending on use case.
 - **Open pending topic: in-game (runtime) updates to `BasePokemon`/`Move` catalog data.** V1 has `MyPokemon` and `MyPokemonMove` snapshot their stats/move data from `BasePokemon`/`Move` at creation/assignment time, so editing a catalog entry later does not retroactively change already-owned Pokemon or already-assigned moves (see `docs/architecture.md` "Deferred to V2 (Backlog)" for the full rationale). For V2 we still need to decide the actual product behavior once catalog editing is a real, live-game feature: should species/move rebalances ever propagate to existing instances (explicit resync operation vs. always-live computed stats), and if so, how (opt-in per player, automatic, versioned)? This is currently unresolved and needs a design decision before it's implemented.
 
 ---
