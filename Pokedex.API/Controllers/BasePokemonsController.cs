@@ -92,6 +92,27 @@ public class BasePokemonsController(IBasePokemonRepository basePokemonRepository
         return NoContent();
     }
 
+    [HttpGet("{id:int}/possible-moves")]
+    public async Task<ActionResult<List<Move>>> GetPossibleMoves(int id, CancellationToken cancellationToken)
+    {
+        var basePokemon = await basePokemonRepository.GetByIdAsync(id, cancellationToken);
+
+        if (basePokemon is null)
+        {
+            return NotFound();
+        }
+
+        var possibleMoves = await basePokemonRepository.GetPossibleMovesAsync(id, cancellationToken);
+        return Ok(possibleMoves);
+    }
+
+    [HttpGet("by-move/{moveId:int}")]
+    public async Task<ActionResult<List<BasePokemon>>> GetByMove(int moveId, CancellationToken cancellationToken)
+    {
+        var basePokemons = await basePokemonRepository.GetByMoveAsync(moveId, cancellationToken);
+        return Ok(basePokemons);
+    }
+
     public sealed class CreateBasePokemonRequest
     {
         public string Name { get; set; } = string.Empty;
