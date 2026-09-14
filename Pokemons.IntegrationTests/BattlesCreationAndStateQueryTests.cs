@@ -70,6 +70,127 @@ public class BattlesCreationAndStateQueryTests(BattleApisFixture fixture) : ICla
         Assert.Empty(state.Actions);
     }
 
+    [Fact]
+    public async Task ExecuteAction_WithCurrentTurn_UpdatesHpAndRegistersAction()
+    {
+        var pokemon1 = await CreateMyPokemonWithAssignedMoveAsync("battle-trainer-5", "Epsilon");
+        var pokemon2 = await CreateMyPokemonWithAssignedMoveAsync("battle-trainer-6", "Zeta");
+
+        var createBattleResponse = await _battlesClient.PostAsJsonAsync("/api/battles", new CreateBattleRequest
+        {
+            Pokemon1Id = pokemon1.Id,
+            Pokemon2Id = pokemon2.Id
+        });
+
+        var battle = await createBattleResponse.Content.ReadFromJsonAsync<BattleCreatedDto>();
+        Assert.NotNull(battle);
+
+        var pokemon1MoveId = await GetFirstAssignedMoveIdAsync(pokemon1.Id);
+
+        var executeResponse = await _battlesClient.PostAsJsonAsync($"/api/battles/{battle!.Id}/actions", new ExecuteBattleActionRequest
+        {
+            ActingPokemonId = pokemon1.Id,
+            MoveId = pokemon1MoveId
+        });
+
+        Assert.Equal(HttpStatusCode.OK, executeResponse.StatusCode);
+
+        var execution = await executeResponse.Content.ReadFromJsonAsync<BattleActionExecutionDto>();
+        Assert.NotNull(execution);
+        Assert.Equal(BattleStatusDto.Started, execution!.BattleStatus);
+        Assert.True(execution.DamageDealt >= 0);
+        Assert.Equal(pokemon2.Id, execution.DefenderPokemonId);
+        Assert.Equal(pokemon2.Id, execution.NextTurnPokemonId);
+
+        var stateResponse = await _battlesClient.GetAsync($"/api/battles/{battle.Id}");
+        var state = await stateResponse.Content.ReadFromJsonAsync<BattleStateDto>();
+        Assert.NotNull(state);
+        Assert.Single(state!.Actions);
+    }
+
+    [Fact]
+    public async Task ExecuteAction_OutOfTurn_ReturnsBadRequest()
+    {
+        var pokemon1 = await CreateMyPokemonWithAssignedMoveAsync("battle-trainer-7", "Eta");
+        var pokemon2 = await CreateMyPokemonWithAssignedMoveAsync("battle-trainer-8", "Theta");
+
+        var createBattleResponse = await _battlesClient.PostAsJsonAsync("/api/battles", new CreateBattleRequest
+        {
+            Pokemon1Id = pokemon1.Id,
+            Pokemon2Id = pokemon2.Id
+        });
+
+        var battle = await createBattleResponse.Content.ReadFromJsonAsync<BattleCreatedDto>();
+        Assert.NotNull(battle);
+
+        var pokemon2MoveId = await GetFirstAssignedMoveIdAsync(pokemon2.Id);
+
+        var executeResponse = await _battlesClient.PostAsJsonAsync($"/api/battles/{battle!.Id}/actions", new ExecuteBattleActionRequest
+        {
+            ActingPokemonId = pokemon2.Id,
+            MoveId = pokemon2MoveId
+        });
+
+        Assert.Equal(HttpStatusCode.BadRequest, executeResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task ExecuteAction_AfterBattleFinished_ReturnsBadRequest()
+    {
+        var pokemon1 = await CreateMyPokemonWithAssignedMoveAsync("battle-trainer-9", "Iota");
+        var pokemon2 = await CreateMyPokemonWithAssignedMoveAsync("battle-trainer-10", "Kappa");
+
+        var createBattleResponse = await _battlesClient.PostAsJsonAsync("/api/battles", new CreateBattleRequest
+        {
+            Pokemon1Id = pokemon1.Id,
+            Pokemon2Id = pokemon2.Id
+        });
+
+        var battle = await createBattleResponse.Content.ReadFromJsonAsync<BattleCreatedDto>();
+        Assert.NotNull(battle);
+
+        var pokemon1MoveId = await GetFirstAssignedMoveIdAsync(pokemon1.Id);
+        var pokemon2MoveId = await GetFirstAssignedMoveIdAsync(pokemon2.Id);
+
+        BattleStateDto? currentState = null;
+
+        for (var i = 0; i < 40; i++)
+        {
+            var stateResponse = await _battlesClient.GetAsync($"/api/battles/{battle!.Id}");
+            currentState = await stateResponse.Content.ReadFromJsonAsync<BattleStateDto>();
+            Assert.NotNull(currentState);
+
+            if (currentState!.Status == BattleStatusDto.Finished)
+            {
+                break;
+            }
+
+            var actingPokemonId = currentState.CurrentTurnPokemonId;
+            var moveId = actingPokemonId == pokemon1.Id ? pokemon1MoveId : pokemon2MoveId;
+
+            var executeResponse = await _battlesClient.PostAsJsonAsync($"/api/battles/{battle.Id}/actions", new ExecuteBattleActionRequest
+            {
+                ActingPokemonId = actingPokemonId,
+                MoveId = moveId
+            });
+
+            Assert.Equal(HttpStatusCode.OK, executeResponse.StatusCode);
+        }
+
+        Assert.NotNull(currentState);
+        Assert.Equal(BattleStatusDto.Finished, currentState!.Status);
+        Assert.NotNull(currentState.WinnerPokemonId);
+        Assert.NotNull(currentState.FinishedAt);
+
+        var postFinishResponse = await _battlesClient.PostAsJsonAsync($"/api/battles/{battle!.Id}/actions", new ExecuteBattleActionRequest
+        {
+            ActingPokemonId = currentState.WinnerPokemonId!.Value,
+            MoveId = currentState.WinnerPokemonId.Value == pokemon1.Id ? pokemon1MoveId : pokemon2MoveId
+        });
+
+        Assert.Equal(HttpStatusCode.BadRequest, postFinishResponse.StatusCode);
+    }
+
     private async Task<MyPokemonDto> CreateMyPokemonWithAssignedMoveAsync(string ownerId, string name)
     {
         var basePokemonsResponse = await _pokedexClient.GetAsync("/api/base-pokemons");
@@ -104,10 +225,28 @@ public class BattlesCreationAndStateQueryTests(BattleApisFixture fixture) : ICla
         return myPokemon;
     }
 
+    private async Task<int> GetFirstAssignedMoveIdAsync(int myPokemonId)
+    {
+        var movesResponse = await _pokedexClient.GetAsync($"/api/my-pokemons/{myPokemonId}/moves");
+        Assert.Equal(HttpStatusCode.OK, movesResponse.StatusCode);
+
+        var assignedMoves = await movesResponse.Content.ReadFromJsonAsync<List<MyPokemonMoveDto>>();
+        Assert.NotNull(assignedMoves);
+        Assert.NotEmpty(assignedMoves);
+
+        return assignedMoves![0].MoveId;
+    }
+
     public sealed class CreateBattleRequest
     {
         public int Pokemon1Id { get; set; }
         public int Pokemon2Id { get; set; }
+    }
+
+    public sealed class ExecuteBattleActionRequest
+    {
+        public int ActingPokemonId { get; set; }
+        public int MoveId { get; set; }
     }
 
     public sealed class BattleCreatedDto
@@ -118,6 +257,21 @@ public class BattlesCreationAndStateQueryTests(BattleApisFixture fixture) : ICla
         public int Pokemon2Id { get; set; }
         public int CurrentTurnPokemonId { get; set; }
         public DateTime StartedAt { get; set; }
+    }
+
+    public sealed class BattleActionExecutionDto
+    {
+        public int BattleId { get; set; }
+        public int TurnNumber { get; set; }
+        public int ActingPokemonId { get; set; }
+        public int MoveId { get; set; }
+        public int DamageDealt { get; set; }
+        public int DefenderPokemonId { get; set; }
+        public int DefenderRemainingHP { get; set; }
+        public BattleStatusDto BattleStatus { get; set; }
+        public int? NextTurnPokemonId { get; set; }
+        public int? WinnerPokemonId { get; set; }
+        public DateTime? FinishedAt { get; set; }
     }
 
     public sealed class BattleStateDto
@@ -177,6 +331,11 @@ public class BattlesCreationAndStateQueryTests(BattleApisFixture fixture) : ICla
         public string OwnerId { get; set; } = string.Empty;
         public int BasePokemonId { get; set; }
         public string Name { get; set; } = string.Empty;
+    }
+
+    public sealed class MyPokemonMoveDto
+    {
+        public int MoveId { get; set; }
     }
 
     public sealed class BasePokemonDto

@@ -1,4 +1,5 @@
 using Microsoft.OpenApi;
+using Pokemons.Domain;
 using Pokemons.Infra.DependencyInjection;
 using Scalar.AspNetCore;
 
@@ -13,6 +14,8 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Battles API", Version = "v1" });
 });
 builder.Services.AddPokemonsPersistence(builder.Configuration);
+builder.Services.AddScoped<IRandomProvider, RandomProvider>();
+builder.Services.AddScoped<DamageCalculator>();
 
 var app = builder.Build();
 
