@@ -191,6 +191,67 @@ public class BattlesCreationAndStateQueryTests(BattleApisFixture fixture) : ICla
         Assert.Equal(HttpStatusCode.BadRequest, postFinishResponse.StatusCode);
     }
 
+    [Fact]
+    public async Task GetHistory_AfterBattleFinished_ReturnsTurnOrderedActions()
+    {
+        var pokemon1 = await CreateMyPokemonWithAssignedMoveAsync("battle-trainer-11", "Lambda");
+        var pokemon2 = await CreateMyPokemonWithAssignedMoveAsync("battle-trainer-12", "Mu");
+
+        var createBattleResponse = await _battlesClient.PostAsJsonAsync("/api/battles", new CreateBattleRequest
+        {
+            Pokemon1Id = pokemon1.Id,
+            Pokemon2Id = pokemon2.Id
+        });
+
+        var battle = await createBattleResponse.Content.ReadFromJsonAsync<BattleCreatedDto>();
+        Assert.NotNull(battle);
+
+        var pokemon1MoveId = await GetFirstAssignedMoveIdAsync(pokemon1.Id);
+        var pokemon2MoveId = await GetFirstAssignedMoveIdAsync(pokemon2.Id);
+
+        BattleStateDto? currentState = null;
+
+        for (var i = 0; i < 40; i++)
+        {
+            var stateResponse = await _battlesClient.GetAsync($"/api/battles/{battle!.Id}");
+            currentState = await stateResponse.Content.ReadFromJsonAsync<BattleStateDto>();
+            Assert.NotNull(currentState);
+
+            if (currentState!.Status == BattleStatusDto.Finished)
+            {
+                break;
+            }
+
+            var actingPokemonId = currentState.CurrentTurnPokemonId;
+            var moveId = actingPokemonId == pokemon1.Id ? pokemon1MoveId : pokemon2MoveId;
+
+            var executeResponse = await _battlesClient.PostAsJsonAsync($"/api/battles/{battle.Id}/actions", new ExecuteBattleActionRequest
+            {
+                ActingPokemonId = actingPokemonId,
+                MoveId = moveId
+            });
+
+            Assert.Equal(HttpStatusCode.OK, executeResponse.StatusCode);
+        }
+
+        Assert.NotNull(currentState);
+        Assert.Equal(BattleStatusDto.Finished, currentState!.Status);
+
+        var historyResponse = await _battlesClient.GetAsync($"/api/battles/{battle!.Id}/history");
+
+        Assert.Equal(HttpStatusCode.OK, historyResponse.StatusCode);
+
+        var history = await historyResponse.Content.ReadFromJsonAsync<List<BattleActionDto>>();
+        Assert.NotNull(history);
+        Assert.NotEmpty(history);
+
+        var orderedTurns = history!.Select(a => a.TurnNumber).OrderBy(turn => turn).ToList();
+        var actualTurns = history.Select(a => a.TurnNumber).ToList();
+        Assert.Equal(orderedTurns, actualTurns);
+
+        Assert.Equal(currentState.Actions.Count, history.Count);
+    }
+
     private async Task<MyPokemonDto> CreateMyPokemonWithAssignedMoveAsync(string ownerId, string name)
     {
         var basePokemonsResponse = await _pokedexClient.GetAsync("/api/base-pokemons");

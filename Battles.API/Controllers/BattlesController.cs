@@ -179,6 +179,18 @@ public class BattlesController(
         return Ok(MapBattleState(battle));
     }
 
+    [HttpGet("{id:int}/history")]
+    public async Task<ActionResult<List<BattleActionResponse>>> GetHistory(int id, CancellationToken cancellationToken)
+    {
+        var battle = await battleRepository.GetByIdAsync(id, cancellationToken);
+        if (battle is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(MapBattleHistory(battle));
+    }
+
     private static BasePokemon ToBasePokemon(MyPokemon myPokemon)
     {
         return new BasePokemon
@@ -222,19 +234,24 @@ public class BattlesController(
                 CurrentHP = battle.Pokemon2.CurrentHP,
                 TotalHP = battle.Pokemon2.TotalHP
             },
-            Actions = battle.Actions
-                .OrderBy(a => a.TurnNumber)
-                .Select(a => new BattleActionResponse
-                {
-                    Id = a.Id,
-                    TurnNumber = a.TurnNumber,
-                    ActingPokemonId = a.ActingPokemonId,
-                    MoveId = a.MoveId,
-                    DamageDealt = a.DamageDealt,
-                    ExecutedAt = a.ExecutedAt
-                })
-                .ToList()
+            Actions = MapBattleHistory(battle)
         };
+    }
+
+    private static List<BattleActionResponse> MapBattleHistory(Battle battle)
+    {
+        return battle.Actions
+            .OrderBy(a => a.TurnNumber)
+            .Select(a => new BattleActionResponse
+            {
+                Id = a.Id,
+                TurnNumber = a.TurnNumber,
+                ActingPokemonId = a.ActingPokemonId,
+                MoveId = a.MoveId,
+                DamageDealt = a.DamageDealt,
+                ExecutedAt = a.ExecutedAt
+            })
+            .ToList();
     }
 
     public sealed class CreateBattleRequest
